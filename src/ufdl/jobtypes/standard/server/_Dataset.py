@@ -15,6 +15,7 @@ class Dataset(ServerResidentType[Domain, RawJSONObject]):
         return {}
 
     def parse_json_value(self, value: RawJSONElement) -> RawJSONObject:
+        self.validate_with_schema(value)
         return value
 
     @property
