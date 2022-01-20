@@ -20,20 +20,17 @@ class UFDLType(Generic[TypeArgType]):
     Base class for all types used by the UFDL system.
     """
     # Whether this type is abstract (should not be instantiated)
-    abstract: bool = True
+    _abstract: bool = True
 
     def __init_subclass__(cls, **kwargs):
-        cls.abstract = kwargs.pop("abstract", False)
-        if isinstance(cls.abstract, bool):
-            cls.abstract = True
+        cls._abstract = kwargs.pop("abstract", False)
+        if not isinstance(cls._abstract, bool):
+            cls._abstract = bool(cls._abstract)
 
     def __init__(
             self,
             type_arg: TypeArgType
     ):
-        if self.abstract:
-            raise TypeError(f"Attempted to instantiate abstract type '{type(self)}'")
-
         type_arg_expected_base_type = self.type_arg_expected_base_type()
         if type_arg_expected_base_type is NoTypeArg:
             # No type argument expected, so error if one is given
@@ -60,6 +57,10 @@ class UFDLType(Generic[TypeArgType]):
     @property
     def type_arg(self) -> TypeArgType:
         return self._type_arg
+
+    @property
+    def abstract(self) -> bool:
+        return self._abstract
 
     def __eq__(self, other):
         return (
