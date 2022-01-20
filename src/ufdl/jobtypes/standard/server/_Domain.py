@@ -3,7 +3,7 @@ from typing import Dict, Type
 from wai.json.raw import RawJSONObject
 from wai.json.schema import JSONSchema
 
-from ...base import NoTypeArg, ServerResidentType
+from ...base import ServerResidentType
 
 
 class Domain(ServerResidentType[str, str]):
