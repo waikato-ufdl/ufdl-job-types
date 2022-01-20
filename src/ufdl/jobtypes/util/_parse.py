@@ -18,7 +18,7 @@ def parse_type(
     params_start = type_string.find("<")
     if params_start == -1:
         name = type_string
-        args = "<>"
+        args = ""
     else:
         name = type_string[:params_start]
         args = type_string[params_start:]
@@ -29,7 +29,7 @@ def parse_type(
         raise UnknownTypeNameException(name)
 
     try:
-        parsed_args_list = [parse_arg(arg) for arg in split_args(args)]
+        parsed_args_list = parse_args(args)
     except Exception as e:
         raise TypeParsingException(type_string) from e
 
@@ -37,6 +37,21 @@ def parse_type(
         parsed_args_list = [None]
 
     return type_class(*parsed_args_list)
+
+
+def parse_args(args: str) -> List[Union[UFDLType, str, int]]:
+    """
+    Parses the string representation of a list of type arguments.
+
+    :param args:
+                The type arguments to parse.
+    :return:
+                The parsed types.
+    """
+    if args == "":
+        return []
+
+    return [parse_arg(arg) for arg in split_args(args)]
 
 
 def parse_arg(arg: str) -> Union[UFDLType, str, int]:
