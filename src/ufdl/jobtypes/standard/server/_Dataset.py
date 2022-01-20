@@ -18,6 +18,9 @@ class Dataset(ServerResidentType[Domain, RawJSONObject]):
         self.validate_with_schema(value)
         return value
 
+    def format_python_value_to_json(self, value: RawJSONObject) -> RawJSONElement:
+        raise NotImplementedError(self.format_python_value_to_json.__name__)
+
     @property
     def json_schema(self) -> JSONSchema:
         raise NotImplementedError(self.json_schema.__name__)

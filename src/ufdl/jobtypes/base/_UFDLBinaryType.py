@@ -24,3 +24,15 @@ class UFDLBinaryType(
                     The value parsed into Python.
         """
         raise NotImplementedError(self.parse_binary_value.__name__)
+
+    @abstractmethod
+    def format_python_value(self, value: PythonType) -> bytes:
+        """
+        Formats a Python value into binary.
+
+        :param value:
+                    The value to format.
+        :return:
+                    The serialised value.
+        """
+        raise NotImplementedError(self.format_python_value.__name__)

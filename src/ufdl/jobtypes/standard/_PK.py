@@ -13,6 +13,9 @@ class PK(UFDLJSONType[ServerResidentType[Union[UFDLType, None], Any], int]):
 
         return value
 
+    def format_python_value_to_json(self, value: int) -> RawJSONElement:
+        return value
+
     @property
     def json_schema(self) -> JSONSchema:
         return enum(

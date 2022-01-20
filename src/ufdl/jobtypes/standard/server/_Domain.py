@@ -1,6 +1,6 @@
 from typing import Dict, Type
 
-from wai.json.raw import RawJSONObject
+from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
 
 from ...base import ServerResidentType
@@ -15,6 +15,9 @@ class Domain(ServerResidentType[str, str]):
 
     def parse_json_value(self, value: RawJSONObject) -> RawJSONObject:
         return value
+
+    def format_python_value_to_json(self, value: str) -> RawJSONElement:
+        raise NotImplementedError(self.format_python_value_to_json.__name__)
 
     @property
     def json_schema(self) -> JSONSchema:

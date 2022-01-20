@@ -23,6 +23,9 @@ class JobOutput(ServerResidentType[UFDLBinaryType[PythonType], PythonType]):
             download_function(self.server_table_name(), value)
         )
 
+    def format_python_value_to_json(self, value: PythonType) -> RawJSONElement:
+        raise NotImplementedError(self.format_python_value_to_json.__name__)
+
     @property
     def json_schema(self) -> JSONSchema:
         return enum(

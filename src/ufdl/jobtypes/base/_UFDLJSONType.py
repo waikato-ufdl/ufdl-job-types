@@ -32,6 +32,21 @@ class UFDLJSONType(
         """
         raise NotImplementedError(self.parse_json_value.__name__)
 
+    def format_python_value(self, value: PythonType) -> bytes:
+        return json.dumps(self.format_python_value_to_json(value)).encode("UTF-8")
+
+    @abstractmethod
+    def format_python_value_to_json(self, value: PythonType) -> RawJSONElement:
+        """
+        Formats a Python value into JSON.
+
+        :param value:
+                    The value to format.
+        :return:
+                    The raw JSON representation of the value.
+        """
+        raise NotImplementedError(self.format_python_value_to_json.__name__)
+
     @property
     @abstractmethod
     def json_schema(self) -> JSONSchema:
