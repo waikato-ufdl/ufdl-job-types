@@ -1,4 +1,4 @@
-from typing import Type
+from typing import Dict, Type
 
 from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
@@ -11,8 +11,8 @@ class Dataset(ServerResidentType[Domain, RawJSONObject]):
     def server_table_name(self) -> str:
         return f"{self.type_arg.extended_name}Dataset"
 
-    def filter_rules(self) -> str:
-        return ""
+    def filter_rules(self) -> Dict[str, str]:
+        return {}
 
     def parse_json_value(self, value: RawJSONElement) -> RawJSONObject:
         return value
