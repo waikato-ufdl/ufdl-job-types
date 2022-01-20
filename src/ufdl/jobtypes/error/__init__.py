@@ -1,0 +1,11 @@
+"""
+The types of errors that this library can raise.
+"""
+from ._IsNotSubtypeException import IsNotSubtypeException
+from ._NotInitialisedException import NotInitialisedException
+from ._SupportsNoInputException import SupportsNoInputException
+from ._TypeDoesNotSupportBinaryException import TypeDoesNotSupportBinaryException
+from ._TypeDoesNotSupportJSONException import TypeDoesNotSupportJSONException
+from ._TypeParsingException import TypeParsingException
+from ._UnknownTypeNameException import UnknownTypeNameException
+from ._WrongNumberOfTypeArgsException import WrongNumberOfTypeArgsException
