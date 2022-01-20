@@ -4,7 +4,7 @@ from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
 
 from ...base import ServerResidentType
-from .._Domain import Domain
+from ._Domain import Domain
 
 
 class Dataset(ServerResidentType[Domain, RawJSONObject]):
