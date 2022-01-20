@@ -19,6 +19,7 @@ class UFDLJSONType(
     def parse_binary_value(self, value: bytes) -> PythonType:
         return self.parse_json_value(json.loads(value.decode("UTF-8")))
 
+    @abstractmethod
     def parse_json_value(self, value: RawJSONElement) -> PythonType:
         """
         Parses a raw value supplied as JSON into the Python-type.
