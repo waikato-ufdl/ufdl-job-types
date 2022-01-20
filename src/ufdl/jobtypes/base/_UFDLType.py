@@ -60,7 +60,10 @@ class UFDLType(Generic[TypeArgType]):
 
     @property
     def abstract(self) -> bool:
-        return self._abstract
+        return self._abstract or (
+            isinstance(self._type_arg, UFDLType)
+            and self._type_arg.abstract
+        )
 
     def __eq__(self, other):
         return (
