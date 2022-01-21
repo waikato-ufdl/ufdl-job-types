@@ -1,4 +1,4 @@
-from typing import Dict, Type
+from typing import Dict, Tuple, Type
 
 from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
@@ -7,9 +7,9 @@ from ...base import ServerResidentType
 from ._Domain import Domain
 
 
-class Dataset(ServerResidentType[Domain, RawJSONObject]):
+class Dataset(ServerResidentType[Tuple[Domain], RawJSONObject]):
     def server_table_name(self) -> str:
-        return f"{self.type_arg.extended_name}Dataset"
+        return f"{self.type_args[0].extended_name}Dataset"
 
     def filter_rules(self) -> Dict[str, str]:
         return {}
@@ -26,5 +26,5 @@ class Dataset(ServerResidentType[Domain, RawJSONObject]):
         raise NotImplementedError(self.json_schema.__name__)
 
     @classmethod
-    def type_arg_expected_base_type(cls) -> Type[Domain]:
-        return Domain
+    def type_params_expected_base_types(cls) -> Tuple[Type[Domain]]:
+        return Domain,

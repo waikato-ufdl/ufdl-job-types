@@ -7,11 +7,11 @@ from wai.json.schema import JSONSchema
 
 from ._PythonType import PythonType
 from ._UFDLBinaryType import UFDLBinaryType
-from ._UFDLType import TypeArgType
+from ._UFDLType import TypeArgsType
 
 
 class UFDLJSONType(
-    UFDLBinaryType[TypeArgType, PythonType],
+    UFDLBinaryType[TypeArgsType, PythonType],
     abstract=True
 ):
     """

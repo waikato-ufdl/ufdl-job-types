@@ -1,6 +1,6 @@
 from typing import Optional, Type, Union
 
-from ..base import UFDLType, NoTypeArg
+from ..base import UFDLType
 from ..initialise import name_type_translate
 
 
@@ -58,19 +58,10 @@ def format_type_or_type_class(
     """
     if isinstance(ufdl_type, UFDLType):
         type_name = format_type_class_name(type(ufdl_type))
-        formatted_type_args = (
-            format_type_args_or_params(ufdl_type.type_arg)
-            if ufdl_type.type_arg is not None else
-            ""
-        )
+        formatted_type_args = format_type_args_or_params(*ufdl_type.type_args)
     else:
         type_name = format_type_class_name(ufdl_type)
-        type_arg_expected_base_type = ufdl_type.type_arg_expected_base_type()
-        formatted_type_args = (
-            ""
-            if type_arg_expected_base_type is NoTypeArg else
-            format_type_args_or_params(type_arg_expected_base_type)
-        )
+        formatted_type_args = format_type_args_or_params(*ufdl_type.type_params_expected_base_types())
 
     return f"{type_name}{formatted_type_args}"
 

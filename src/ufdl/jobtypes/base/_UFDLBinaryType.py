@@ -2,11 +2,11 @@ from abc import abstractmethod
 from typing import Generic
 
 from ._PythonType import PythonType
-from ._UFDLType import UFDLType, TypeArgType
+from ._UFDLType import UFDLType, TypeArgsType
 
 
 class UFDLBinaryType(
-    UFDLType[TypeArgType],
+    UFDLType[TypeArgsType],
     Generic[PythonType],
     abstract=True
 ):

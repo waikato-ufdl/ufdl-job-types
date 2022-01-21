@@ -1,4 +1,4 @@
-from typing import Dict, Type
+from typing import Dict, Tuple, Type
 
 from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
@@ -6,12 +6,12 @@ from wai.json.schema import JSONSchema
 from ...base import ServerResidentType
 
 
-class Domain(ServerResidentType[str, str]):
+class Domain(ServerResidentType[Tuple[str], str]):
     def server_table_name(self) -> str:
         return "DataDomain"
 
     def filter_rules(self) -> Dict[str, str]:
-        return {"name": self.type_arg.lower()}
+        return {"name": self.type_args[0].lower()}
 
     def parse_json_value(self, value: RawJSONObject) -> RawJSONObject:
         return value
@@ -24,5 +24,5 @@ class Domain(ServerResidentType[str, str]):
         raise NotImplementedError(self.json_schema.__name__)
 
     @classmethod
-    def type_arg_expected_base_type(cls) -> Type[str]:
-        return str
+    def type_params_expected_base_types(cls) -> Tuple[Type[str]]:
+        return str,

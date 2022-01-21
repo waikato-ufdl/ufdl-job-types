@@ -4,11 +4,11 @@ from typing import Dict, List
 from ..initialise import list_function
 from ._PythonType import PythonType
 from ._UFDLJSONType import UFDLJSONType
-from ._UFDLType import TypeArgType
+from ._UFDLType import TypeArgsType
 
 
 class ServerResidentType(
-    UFDLJSONType[TypeArgType, PythonType],
+    UFDLJSONType[TypeArgsType, PythonType],
     abstract=True
 ):
     @abstractmethod

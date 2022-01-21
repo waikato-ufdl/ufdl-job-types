@@ -1,12 +1,12 @@
-from typing import Any, Type, Union
+from typing import Tuple, Type
 
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, enum
 
-from ..base import ServerResidentType, UFDLJSONType, UFDLType
+from ..base import ServerResidentType, UFDLJSONType
 
 
-class PK(UFDLJSONType[ServerResidentType[Union[UFDLType, None], Any], int]):
+class PK(UFDLJSONType[Tuple[ServerResidentType], int]):
     def parse_json_value(self, value: RawJSONElement) -> int:
         if not isinstance(value, int):
             raise ValueError(f"Expected integer PK value; got {type(value)}")
@@ -20,9 +20,9 @@ class PK(UFDLJSONType[ServerResidentType[Union[UFDLType, None], Any], int]):
     def json_schema(self) -> JSONSchema:
         return enum(
             *value['pk']
-            for value in self.type_arg.list_all_values()
+            for value in self.type_args[0].list_all_values()
         )
 
     @classmethod
-    def type_arg_expected_base_type(cls) -> Type[ServerResidentType]:
-        return ServerResidentType
+    def type_params_expected_base_types(cls) -> Tuple[Type[ServerResidentType]]:
+        return ServerResidentType,

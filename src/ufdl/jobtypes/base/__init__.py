@@ -5,4 +5,4 @@ from ._PythonType import PythonType
 from ._ServerResidentType import ServerResidentType
 from ._UFDLBinaryType import UFDLBinaryType
 from ._UFDLJSONType import UFDLJSONType
-from ._UFDLType import UFDLType, NoTypeArg, TypeArgType
+from ._UFDLType import UFDLType, NoTypeArg, TypeArgsType

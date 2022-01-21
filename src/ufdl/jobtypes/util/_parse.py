@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Tuple, Union
 
 from ..base import UFDLType
 from ..error import UnknownTypeNameException, TypeParsingException
@@ -15,13 +15,13 @@ def parse_type(
                 The type's string representation.
     :return:
     """
-    params_start = type_string.find("<")
-    if params_start == -1:
+    args_start = type_string.find("<")
+    if args_start == -1:
         name = type_string
         args = ""
     else:
-        name = type_string[:params_start]
-        args = type_string[params_start:]
+        name = type_string[:args_start]
+        args = type_string[args_start:]
 
     type_class = name_type_translate(name)
 
@@ -29,17 +29,14 @@ def parse_type(
         raise UnknownTypeNameException(name)
 
     try:
-        parsed_args_list = parse_args(args)
+        parsed_args = parse_args(args)
     except Exception as e:
         raise TypeParsingException(type_string) from e
 
-    if len(parsed_args_list) == 0:
-        parsed_args_list = [None]
-
-    return type_class(*parsed_args_list)
+    return type_class(parsed_args)
 
 
-def parse_args(args: str) -> List[Union[UFDLType, str, int]]:
+def parse_args(args: str) -> Tuple[Union[UFDLType, str, int]]:
     """
     Parses the string representation of a list of type arguments.
 
@@ -49,9 +46,9 @@ def parse_args(args: str) -> List[Union[UFDLType, str, int]]:
                 The parsed types.
     """
     if args == "":
-        return []
+        return tuple()
 
-    return [parse_arg(arg) for arg in split_args(args)]
+    return tuple(parse_arg(arg) for arg in split_args(args))
 
 
 def parse_arg(arg: str) -> Union[UFDLType, str, int]:

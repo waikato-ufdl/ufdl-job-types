@@ -1,12 +1,12 @@
-from typing import Type
+from typing import Tuple
 
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, string_schema
 
-from ufdl.jobtypes.base import NoTypeArg, UFDLJSONType
+from ufdl.jobtypes.base import UFDLJSONType
 
 
-class String(UFDLJSONType[None, str]):
+class String(UFDLJSONType[Tuple, str]):
     def parse_json_value(self, value: RawJSONElement) -> str:
         if not isinstance(value, str):
             raise ValueError("Value is not a string")
@@ -20,5 +20,5 @@ class String(UFDLJSONType[None, str]):
         return string_schema()
 
     @classmethod
-    def type_arg_expected_base_type(cls) -> Type[NoTypeArg]:
-        return NoTypeArg
+    def type_params_expected_base_types(cls) -> Tuple:
+        return tuple()
