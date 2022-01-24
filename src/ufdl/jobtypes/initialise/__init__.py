@@ -11,3 +11,4 @@ from ._initialisation import (
     retrieve_function,
     download_function
 )
+from ._not_initialised import not_initialised
