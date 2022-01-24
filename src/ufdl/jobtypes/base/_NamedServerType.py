@@ -3,9 +3,10 @@ from abc import ABC, abstractmethod
 from wai.json.raw import RawJSONObject
 
 from ._ServerResidentType import ServerResidentType, TypeArgsType
+from ._UFDLJSONType import PythonType
 
 
-class NamedServerType(ServerResidentType[TypeArgsType], ABC):
+class NamedServerType(ServerResidentType[TypeArgsType, PythonType], ABC):
     """
     Server types from which we can extract a unique name.
     """
