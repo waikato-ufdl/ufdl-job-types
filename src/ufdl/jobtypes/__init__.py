@@ -1,1 +1,1 @@
-from ._type import AnyUFDLType
+from ._type import AnyUFDLType, StrType, IntType
