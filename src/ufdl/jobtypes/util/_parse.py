@@ -1,13 +1,13 @@
-from typing import List, Tuple, Union
+from typing import List, Tuple
 
-from ..base import UFDLType
+from .._type import AnyUFDLType
 from ..error import UnknownTypeNameException, TypeParsingException
 from ..initialise import name_type_translate
 
 
 def parse_type(
         type_string: str
-) -> UFDLType:
+) -> AnyUFDLType:
     """
     Parses the string representation of a type into an actual type instance.
 
@@ -15,18 +15,35 @@ def parse_type(
                 The type's string representation.
     :return:
     """
+    # If the argument is single-quoted, it is a string-constant type argument
+    if type_string.startswith("'") and type_string.endswith("'"):
+        return type_string[1:-1].replace("\\'", "'")
+
+    try:
+        return int(type_string)
+    except ValueError:
+        pass
+
     args_start = type_string.find("<")
     if args_start == -1:
-        name = type_string
+        name = type_string.strip()
         args = ""
     else:
-        name = type_string[:args_start]
-        args = type_string[args_start:]
+        name = type_string[:args_start].strip()
+        args = type_string[args_start:].strip()
 
     type_class = name_type_translate(name)
 
     if type_class is None:
         raise UnknownTypeNameException(name)
+
+    if type_class is str or type_class is int:
+        if args != "":
+            raise TypeParsingException(type_string)
+        return type_class
+
+    if args == "":
+        return type_class
 
     try:
         parsed_args = parse_args(args)
@@ -36,7 +53,7 @@ def parse_type(
     return type_class(parsed_args)
 
 
-def parse_args(args: str) -> Tuple[Union[UFDLType, str, int]]:
+def parse_args(args: str) -> Tuple[AnyUFDLType]:
     """
     Parses the string representation of a list of type arguments.
 
@@ -48,27 +65,7 @@ def parse_args(args: str) -> Tuple[Union[UFDLType, str, int]]:
     if args == "":
         return tuple()
 
-    return tuple(parse_arg(arg) for arg in split_args(args))
-
-
-def parse_arg(arg: str) -> Union[UFDLType, str, int]:
-    """
-    Parses a single type-argument.
-
-    :param arg:
-                The type-argument to parse.
-    :return:
-                The instantiated type-argument.
-    """
-    # If the argument is single-quoted, it is a string-constant type argument
-    if arg.startswith("'") and arg.endswith("'"):
-        return arg[1:-1].replace("\\'", "'")
-
-    #
-    if arg.isidentifier():
-        return parse_type(arg)
-
-    return int(arg)
+    return tuple(parse_type(arg) for arg in split_args(args))
 
 
 def split_args(arg_string: str) -> List[str]:

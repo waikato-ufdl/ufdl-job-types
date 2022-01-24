@@ -1,31 +1,37 @@
 import builtins
-from typing import Type, Union
 
 from ..base import UFDLType
+from .._type import AnyUFDLType
+from ._is_ufdl_type import is_ufdl_type
 
 
 def is_subtype(
-        type: Union[UFDLType, int, str],
-        of: Union[Type[UFDLType], UFDLType, Type[int], Type[str]]
+        type: AnyUFDLType,
+        of: AnyUFDLType
 ) -> bool:
-    if isinstance(type, str):
-        return of is str
+    # Make sure the given types is things that can be checked
+    if not is_ufdl_type(type):
+        raise TypeError("type")
+    if not is_ufdl_type(of):
+        raise TypeError("of")
 
-    elif isinstance(type, int):
-        return of is int
-
-    elif isinstance(type, UFDLType):
-        if of is int or of is str:
-            return False
-
-        elif isinstance(of, UFDLType):
-            return type.is_subtype_of(of)
-
-        elif isinstance(of, builtins.type) and issubclass(of, UFDLType):
-            return isinstance(type, of)
-
+    if isinstance(of, builtins.type):
+        if issubclass(of, UFDLType):
+            return isinstance(type, of) or isinstance(type, builtins.type) and issubclass(type, of)
         else:
-            raise TypeError("of")
+            assert of is str or of is int
+            return isinstance(type, of) or type is of
+
+    elif isinstance(of, UFDLType):
+        if isinstance(type, UFDLType):
+            return type.is_subtype_of(of)
+        else:
+            return (
+                    isinstance(type, builtins.type)
+                    and issubclass(type, UFDLType)
+                    and type.type_base_equivalent().is_subtype_of(of)
+            )
 
     else:
-        raise TypeError("type")
+        assert isinstance(of, (str, int))
+        return builtins.type(type) is builtins.type(of) and type == of

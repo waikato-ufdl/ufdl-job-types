@@ -5,7 +5,7 @@ from ..error import WrongNumberOfTypeArgsException, IsNotSubtypeException
 from ..initialise import name_type_translate
 from ..util import format_type_or_type_class
 
-TypeArgsType = TypeVar('TypeArgsType', bound=Tuple[Union['UFDLType', str, int]])
+TypeArgsType = TypeVar('TypeArgsType', bound=Tuple[Union['UFDLType', str, int, Type['UFDLType'], Type[str, Type[int]]], ...])
 
 
 class UFDLType(Generic[TypeArgsType]):
@@ -34,20 +34,9 @@ class UFDLType(Generic[TypeArgsType]):
             raise WrongNumberOfTypeArgsException(name_type_translate(type(self)), num_type_args, num_type_params)
 
         # Check each type argument is a sub-type of its expected base type
+        from ..util import is_subtype
         for type_arg, type_param_expected_base_type in zip(type_args, type_params_expected_base_types):
-            if type_param_expected_base_type is str or type_param_expected_base_type is int:
-                if not isinstance(type_arg, type_param_expected_base_type):
-                    raise IsNotSubtypeException(
-                        format_type_or_type_class(type_arg),
-                        str(type_param_expected_base_type)
-                    )
-            elif issubclass(type_param_expected_base_type, UFDLType):
-                if not isinstance(type_arg, type_param_expected_base_type):
-                    raise IsNotSubtypeException(
-                        format_type_or_type_class(type_arg),
-                        format_type_or_type_class(type_param_expected_base_type)
-                    )
-            elif not type_arg.is_subtype_of(type_param_expected_base_type):
+            if not is_subtype(type_arg, type_param_expected_base_type):
                 raise IsNotSubtypeException(
                     format_type_or_type_class(type_arg),
                     format_type_or_type_class(type_param_expected_base_type)
@@ -95,6 +84,10 @@ class UFDLType(Generic[TypeArgsType]):
                         for type_arg, other_type_arg in zip(self._type_args, other._type_args)
                 )
         )
+
+    @classmethod
+    def type_base_equivalent(cls) -> 'UFDLType'[TypeArgsType]:
+        return cls(cls.type_params_expected_base_types())
 
     @classmethod
     @abstractmethod

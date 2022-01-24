@@ -2,10 +2,11 @@ from typing import Optional, Type, Union
 
 from ..base import UFDLType
 from ..initialise import name_type_translate
+from .._type import AnyUFDLType
 
 
 def format_type_args_or_params(
-        *type_args: Union[Type[UFDLType], UFDLType, None, Type[str], Type[int], str, int]
+        *type_args: AnyUFDLType
 ) -> str:
     """
     Formats a string representation of a list of type arguments.
@@ -19,7 +20,7 @@ def format_type_args_or_params(
     if len(type_args) == 0:
         return ""
 
-    return f"<{', '.join(format_type_arg_or_param(type_arg) for type_arg in type_args)}>"
+    return f"<{', '.join(format_type(type_arg) for type_arg in type_args)}>"
 
 
 def format_type_class_name(
@@ -59,34 +60,32 @@ def format_type_or_type_class(
     if isinstance(ufdl_type, UFDLType):
         type_name = format_type_class_name(type(ufdl_type))
         formatted_type_args = format_type_args_or_params(*ufdl_type.type_args)
-    else:
+    elif isinstance(ufdl_type, type) and issubclass(ufdl_type, UFDLType):
         type_name = format_type_class_name(ufdl_type)
         formatted_type_args = format_type_args_or_params(*ufdl_type.type_params_expected_base_types())
+    else:
+        raise TypeError("ufdl_type")
 
     return f"{type_name}{formatted_type_args}"
 
 
-def format_type_arg_or_param(
-        type_arg: Union[Type[UFDLType], UFDLType, None, Type[str], Type[int], str, int]
+def format_type(
+        type_arg: AnyUFDLType
 ) -> str:
     """
-    Formats a single type argument/parameter as a string.
+    Formats a single type as a string.
 
     :param type_arg:
                 The type argument/parameter to format.
     :return:
                 The formatted string representation of the type argument/parameter.
     """
-    # Type parameters which have no bound are represented by a question mark
-    if type_arg is None:
-        return "?"
-
     # Type parameters which are str or int are represented by str or int
-    if type_arg is str or type_arg is int:
+    if isinstance(type_arg, type) and type_arg in (str, int):
         return str(type_arg)
 
     # String-value type arguments are single-quoted, with internal single-quotes backslash-escaped
-    if isinstance(type_arg, str):
+    elif isinstance(type_arg, str):
         formatted_str_type_arg = type_arg.replace("'", "\\'")
         return f"'{formatted_str_type_arg}'"
 

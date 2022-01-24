@@ -1,3 +1,4 @@
+import builtins
 from typing import Callable, Dict, List, Optional, Union
 
 from wai.json.raw import RawJSONObject
@@ -11,6 +12,7 @@ RetrieveFunction = Callable[[str, int], RawJSONObject]
 DownloadFunction = Callable[[str, int], bytes]
 
 # Name/type mappings
+RESERVED_TYPES = {"str": str, "int": int}
 NAME_TO_TYPE_MAP: Optional[Dict[str, type]] = None
 TYPE_TO_NAME_MAP: Optional[Dict[type, str]] = None
 
@@ -29,21 +31,27 @@ def initialise_server(
     """
     Initialises the type-systems connection to the server.
     """
-    global NAME_TO_TYPE_MAP, TYPE_TO_NAME_MAP
+    global RESERVED_TYPES, NAME_TO_TYPE_MAP, TYPE_TO_NAME_MAP
     global LIST_FUNCTION, RETRIEVE_FUNCTION, DOWNLOAD_FUNCTION
+    from ..base import UFDLType
 
     LIST_FUNCTION = list_function
     RETRIEVE_FUNCTION = retrieve_function
     DOWNLOAD_FUNCTION = download_function
 
     # Verify and reverse the name/type mapping
-    NAME_TO_TYPE_MAP = dict(name_to_type_map)
+    NAME_TO_TYPE_MAP = {}
     TYPE_TO_NAME_MAP = {}
-    for name, type in name_to_type_map.items():
+    for name, type in zip(RESERVED_TYPES.items(), name_to_type_map.items()):
+        if name in NAME_TO_TYPE_MAP:
+            raise ValueError(f"Type-name '{name}' is reserved")
         if not name.isidentifier():
             raise ValueError(f"Type-name '{name}' is not a valid Python identifier")
+        if not isinstance(type, builtins.type) or not issubclass(type, UFDLType):
+            raise ValueError(f"Type must be a sub-class of {UFDLType.__name__}")
         if type in TYPE_TO_NAME_MAP:
             raise ValueError(f"Multiple type-names detected for type {type}; mapping is not one-to-one")
+        NAME_TO_TYPE_MAP[name] = type
         TYPE_TO_NAME_MAP[type] = name
 
 
