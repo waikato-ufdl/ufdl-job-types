@@ -1,8 +1,10 @@
 from abc import abstractmethod
-from typing import Generic
+from typing import Generic, TypeVar
 
-from ._PythonType import PythonType
 from ._UFDLType import UFDLType, TypeArgsType
+
+# The Python type that is used to represent values of a UFDLType on a worker node
+PythonType = TypeVar('PythonType')
 
 
 class UFDLBinaryType(

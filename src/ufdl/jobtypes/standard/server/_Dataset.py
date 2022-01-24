@@ -14,13 +14,6 @@ class Dataset(ServerResidentType[Tuple[Domain], RawJSONObject]):
     def filter_rules(self) -> Dict[str, str]:
         return {}
 
-    def parse_json_value(self, value: RawJSONElement) -> RawJSONObject:
-        self.validate_with_schema(value)
-        return value
-
-    def format_python_value_to_json(self, value: RawJSONObject) -> RawJSONElement:
-        raise NotImplementedError(self.format_python_value_to_json.__name__)
-
     @property
     def json_schema(self) -> JSONSchema:
         raise NotImplementedError(self.json_schema.__name__)

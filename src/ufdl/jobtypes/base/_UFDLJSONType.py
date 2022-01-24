@@ -5,8 +5,7 @@ import jsonschema
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema
 
-from ._PythonType import PythonType
-from ._UFDLBinaryType import UFDLBinaryType
+from ._UFDLBinaryType import UFDLBinaryType, PythonType
 from ._UFDLType import TypeArgsType
 
 

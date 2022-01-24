@@ -16,13 +16,6 @@ class Framework(ServerResidentType[Tuple[str, str], RawJSONElement]):
             "version": self.type_args[1]
         }
 
-    def parse_json_value(self, value: RawJSONElement) -> RawJSONElement:
-        self.validate_with_schema(value)
-        return value
-
-    def format_python_value_to_json(self, value: RawJSONElement) -> RawJSONElement:
-        return value
-
     @property
     def json_schema(self) -> JSONSchema:
         return standard_object(

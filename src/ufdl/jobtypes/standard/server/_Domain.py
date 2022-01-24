@@ -13,12 +13,6 @@ class Domain(ServerResidentType[Tuple[str], str]):
     def filter_rules(self) -> Dict[str, str]:
         return {"name": self.type_args[0].lower()}
 
-    def parse_json_value(self, value: RawJSONObject) -> RawJSONObject:
-        return value
-
-    def format_python_value_to_json(self, value: str) -> RawJSONElement:
-        raise NotImplementedError(self.format_python_value_to_json.__name__)
-
     @property
     def json_schema(self) -> JSONSchema:
         raise NotImplementedError(self.json_schema.__name__)

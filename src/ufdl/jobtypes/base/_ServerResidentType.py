@@ -1,14 +1,14 @@
 from abc import abstractmethod
 from typing import Dict, List
 
+from wai.json.raw import RawJSONElement, RawJSONObject
+
 from ..initialise import list_function
-from ._PythonType import PythonType
-from ._UFDLJSONType import UFDLJSONType
-from ._UFDLType import TypeArgsType
+from ._UFDLJSONType import UFDLJSONType, TypeArgsType
 
 
 class ServerResidentType(
-    UFDLJSONType[TypeArgsType, PythonType],
+    UFDLJSONType[TypeArgsType, RawJSONObject],
     abstract=True
 ):
     @abstractmethod
@@ -19,7 +19,7 @@ class ServerResidentType(
     def filter_rules(self) -> Dict[str, str]:
         raise NotImplementedError(self.filter_rules.__name__)
 
-    def list_all_values(self) -> List[PythonType]:
+    def list_all_values(self) -> List[RawJSONObject]:
         """
         Gets a list of all applicable values from the server.
         """
@@ -27,3 +27,11 @@ class ServerResidentType(
             self.parse_json_value(value)
             for value in list_function(self.server_table_name(), self.filter_rules())
         ]
+
+    def parse_json_value(self, value: RawJSONElement) -> RawJSONObject:
+        self.validate_with_schema(value)
+        return value
+
+    def format_python_value_to_json(self, value: RawJSONObject) -> RawJSONElement:
+        self.validate_with_schema(value)
+        return value
