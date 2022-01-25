@@ -1,6 +1,6 @@
 from typing import Tuple, Type
 
-from ufdl.json.core.filter import FilterExpression, FilterSpec
+from ufdl.json.core.filter import FilterSpec
 from ufdl.json.core.filter.field import Exact
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, enum

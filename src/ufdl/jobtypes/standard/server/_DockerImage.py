@@ -5,8 +5,9 @@ from ufdl.json.core.filter.field import Exact
 from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
 
-from ufdl.jobtypes.base import NamedServerType
-from ufdl.jobtypes.standard.server import Domain, Framework
+from ...base import NamedServerType
+from ._Domain import Domain
+from ._Framework import Framework
 
 
 class DockerImage(

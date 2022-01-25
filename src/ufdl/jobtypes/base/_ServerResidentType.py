@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Dict, List
+from typing import List
 
 from ufdl.json.core.filter import FilterSpec
 
