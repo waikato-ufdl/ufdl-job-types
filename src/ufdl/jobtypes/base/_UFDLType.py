@@ -5,7 +5,10 @@ from ..error import WrongNumberOfTypeArgsException, IsNotSubtypeException
 from ..initialise import name_type_translate
 from ..util import format_type_or_type_class
 
-TypeArgsType = TypeVar('TypeArgsType', bound=Tuple[Union['UFDLType', str, int, Type['UFDLType'], Type[str, Type[int]]], ...])
+TypeArgsType = TypeVar(
+    'TypeArgsType',
+    bound=Tuple[Union['UFDLType', str, int, Type['UFDLType'], Type[str], Type[int]], ...]
+)
 
 
 class UFDLType(Generic[TypeArgsType]):
