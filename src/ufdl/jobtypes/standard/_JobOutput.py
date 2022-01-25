@@ -36,8 +36,10 @@ class JobOutput(ServerResidentType[Tuple[UFDLType[Tuple[AnyUFDLType, ...], Pytho
     @property
     def json_schema(self) -> JSONSchema:
         return enum(
-            *value['pk']
-            for value in self.list_all_values()
+            *(
+                value['pk']
+                for value in self.list_all_values()
+            )
         )
 
     @classmethod

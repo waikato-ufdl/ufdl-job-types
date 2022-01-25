@@ -19,8 +19,10 @@ class PK(UFDLJSONType[Tuple[ServerResidentType], int]):
     @property
     def json_schema(self) -> JSONSchema:
         return enum(
-            *value['pk']
-            for value in self.type_args[0].list_all_values()
+            *(
+                value['pk']
+                for value in self.type_args[0].list_all_values()
+            )
         )
 
     @classmethod
