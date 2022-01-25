@@ -1,13 +1,15 @@
 import builtins
 from typing import Callable, Dict, List, Optional, Union
 
+from ufdl.json.core.filter import FilterSpec
+
 from wai.json.raw import RawJSONObject
 
 from ..error import NotInitialisedException
 from ._not_initialised import not_initialised
 
 # Types
-ListFunction = Callable[[str, Dict[str, str]], List[RawJSONObject]]
+ListFunction = Callable[[str, FilterSpec], List[RawJSONObject]]
 RetrieveFunction = Callable[[str, int], RawJSONObject]
 DownloadFunction = Callable[[str, int], bytes]
 
@@ -72,9 +74,9 @@ def name_type_translate(name_or_type: Union[str, type]) -> Union[type, str, None
     return mapping.get(name_or_type, None)
 
 
-def list_function(table_name: str, filters: Dict[str, str]) -> List[RawJSONObject]:
+def list_function(table_name: str, filter: FilterSpec) -> List[RawJSONObject]:
     global LIST_FUNCTION
-    return LIST_FUNCTION(table_name, filters)
+    return LIST_FUNCTION(table_name, filter)
 
 
 def retrieve_function(table_name: str, pk: int) -> RawJSONObject:

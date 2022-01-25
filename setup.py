@@ -37,6 +37,7 @@ setup(
     author_email='csterlin@waikato.ac.nz',
     install_requires=[
         "wai.json",
+        "ufdl.json-messages"
     ],
     entry_points={
     }

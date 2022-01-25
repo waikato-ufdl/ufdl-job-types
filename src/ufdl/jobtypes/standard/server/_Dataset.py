@@ -1,5 +1,7 @@
 from typing import Dict, Tuple, Type, Union
 
+from ufdl.json.core.filter import FilterSpec
+from ufdl.json.core.filter.field import Exact
 from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
 
@@ -17,15 +19,15 @@ class Dataset(ServerResidentType[Tuple[Union[Domain, Type[Domain]]], RawJSONObje
                 return f"{description}Dataset"
         return "Dataset"
 
-    def filter_rules(self) -> Dict[str, str]:
-        rules = {}
+    def filter_rules(self) -> FilterSpec:
+        rules = FilterSpec(expressions=[])
         domain_type = self.type_args[0]
         if isinstance(domain_type, Domain):
             name_type, description_type = domain_type.type_args
             if isinstance(name_type, str):
-                rules["domain.name"] = name_type
+                rules.expressions.append(Exact(field="domain.name", value=name_type))
             if isinstance(description_type, str):
-                rules["domain.description"] = description_type
+                rules.expressions.append(Exact(field="domain.description", value=description_type))
         return rules
 
     def parse_json_value(self, value: RawJSONElement) -> RawJSONObject:

@@ -1,5 +1,7 @@
 from typing import Dict, Tuple, Type
 
+from ufdl.json.core.filter import FilterSpec
+from ufdl.json.core.filter.field import Exact
 from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
 
@@ -11,14 +13,14 @@ class Domain(ServerResidentType[Tuple[StrType, StrType], RawJSONObject]):
     def server_table_name(self) -> str:
         return "DataDomain"
 
-    def filter_rules(self) -> Dict[str, str]:
-        rules = {}
+    def filter_rules(self) -> FilterSpec:
+        rules = FilterSpec(expressions=[])
         name_type = self.type_args[0]
         description_type = self.type_args[1]
         if isinstance(name_type, str):
-            rules["name"] = name_type.lower()
+            rules.expressions.append(Exact(field="name", value=name_type.lower()))
         if isinstance(description_type, str):
-            rules["description"] = description_type
+            rules.expressions.append(Exact(field="description", value=description_type.lower()))
         return rules
 
     def parse_json_value(self, value: RawJSONElement) -> RawJSONObject:

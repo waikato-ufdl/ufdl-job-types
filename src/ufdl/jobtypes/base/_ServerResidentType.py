@@ -1,6 +1,8 @@
 from abc import abstractmethod
 from typing import Dict, List
 
+from ufdl.json.core.filter import FilterSpec
+
 from wai.json.raw import RawJSONElement
 
 from ..initialise import list_function
@@ -16,7 +18,7 @@ class ServerResidentType(
         raise NotImplementedError(self.server_table_name.__name__)
 
     @abstractmethod
-    def filter_rules(self) -> Dict[str, str]:
+    def filter_rules(self) -> FilterSpec:
         raise NotImplementedError(self.filter_rules.__name__)
 
     def list_all_values(self) -> List[RawJSONElement]:
