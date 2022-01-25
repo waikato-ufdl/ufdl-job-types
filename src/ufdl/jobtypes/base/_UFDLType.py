@@ -3,15 +3,17 @@ from typing import Generic, Tuple, Type, TypeVar, Union
 
 from ..error import WrongNumberOfTypeArgsException, IsNotSubtypeException
 from ..initialise import name_type_translate
-from ..util import format_type_or_type_class
 
 TypeArgsType = TypeVar(
     'TypeArgsType',
     bound=Tuple[Union['UFDLType', str, int, Type['UFDLType'], Type[str], Type[int]], ...]
 )
 
+# The Python type that is used to represent values of a UFDLType on a worker node
+PythonType = TypeVar('PythonType')
 
-class UFDLType(Generic[TypeArgsType]):
+
+class UFDLType(Generic[TypeArgsType, PythonType]):
     """
     Base class for all types used by the UFDL system.
     """
@@ -114,3 +116,27 @@ class UFDLType(Generic[TypeArgsType]):
                     - int, indicating that the type argument should be an int value.
         """
         raise NotImplementedError(cls.type_params_expected_base_types.__name__)
+
+    @abstractmethod
+    def parse_binary_value(self, value: bytes) -> PythonType:
+        """
+        Parses a raw value supplied as binary into the Python-type.
+
+        :param value:
+                    The value to parse, as binary.
+        :return:
+                    The value parsed into Python.
+        """
+        raise NotImplementedError(self.parse_binary_value.__name__)
+
+    @abstractmethod
+    def format_python_value(self, value: PythonType) -> bytes:
+        """
+        Formats a Python value into binary.
+
+        :param value:
+                    The value to format.
+        :return:
+                    The serialised value.
+        """
+        raise NotImplementedError(self.format_python_value.__name__)

@@ -5,12 +5,11 @@ import jsonschema
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema
 
-from ._UFDLBinaryType import UFDLBinaryType, PythonType
-from ._UFDLType import TypeArgsType
+from ._UFDLType import UFDLType, TypeArgsType, PythonType
 
 
 class UFDLJSONType(
-    UFDLBinaryType[TypeArgsType, PythonType],
+    UFDLType[TypeArgsType, PythonType],
     abstract=True
 ):
     """

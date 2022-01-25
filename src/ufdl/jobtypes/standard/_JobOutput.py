@@ -5,12 +5,13 @@ from ufdl.json.core.filter.field import Exact
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, enum
 
-from ..base import PythonType, UFDLBinaryType, ServerResidentType
+from ..base import PythonType, UFDLType, ServerResidentType
 from ..initialise import download_function
 from ..util import format_type_or_type_class
+from .._type import AnyUFDLType
 
 
-class JobOutput(ServerResidentType[Tuple[UFDLBinaryType[PythonType]], PythonType]):
+class JobOutput(ServerResidentType[Tuple[UFDLType[Tuple[AnyUFDLType, ...], PythonType]], PythonType]):
     def server_table_name(self) -> str:
         return "JobOutput"
 
@@ -40,5 +41,5 @@ class JobOutput(ServerResidentType[Tuple[UFDLBinaryType[PythonType]], PythonType
         )
 
     @classmethod
-    def type_params_expected_base_types(cls) -> Tuple[Type[UFDLBinaryType]]:
-        return UFDLBinaryType,
+    def type_params_expected_base_types(cls) -> Tuple[Type[UFDLType]]:
+        return UFDLType,

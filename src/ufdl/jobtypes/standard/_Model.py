@@ -1,10 +1,10 @@
 from typing import Tuple, Type
 
-from ufdl.jobtypes.base import UFDLBinaryType
-from ufdl.jobtypes.standard.server import Domain
+from ..base import UFDLType
+from .server import Domain
 
 
-class Model(UFDLBinaryType[Tuple[Domain], bytes]):
+class Model(UFDLType[Tuple[Domain], bytes]):
     def parse_binary_value(self, value: bytes) -> bytes:
         return value
 
