@@ -39,7 +39,7 @@ class UFDLType(Generic[TypeArgsType, PythonType]):
             raise WrongNumberOfTypeArgsException(name_type_translate(type(self)), num_type_args, num_type_params)
 
         # Check each type argument is a sub-type of its expected base type
-        from ..util import is_subtype
+        from ..util import is_subtype, format_type_or_type_class
         for type_arg, type_param_expected_base_type in zip(type_args, type_params_expected_base_types):
             if not is_subtype(type_arg, type_param_expected_base_type):
                 raise IsNotSubtypeException(
