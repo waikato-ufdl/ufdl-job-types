@@ -91,7 +91,7 @@ class UFDLType(Generic[TypeArgsType, PythonType]):
         )
 
     @classmethod
-    def type_base_equivalent(cls) -> 'UFDLType'[TypeArgsType]:
+    def type_base_equivalent(cls) -> 'UFDLType[TypeArgsType]':
         return cls(cls.type_params_expected_base_types())
 
     @classmethod
