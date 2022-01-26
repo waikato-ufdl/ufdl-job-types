@@ -9,18 +9,15 @@ from ...base import ServerResidentType
 from ..._type import StrType
 
 
-class Domain(ServerResidentType[Tuple[StrType, StrType], RawJSONObject]):
+class Domain(ServerResidentType[Tuple[StrType], RawJSONObject]):
     def server_table_name(self) -> str:
         return "DataDomain"
 
     def filter_rules(self) -> FilterSpec:
         rules = FilterSpec(expressions=[])
         name_type = self.type_args[0]
-        description_type = self.type_args[1]
         if isinstance(name_type, str):
             rules.expressions.append(Exact(field="name", value=name_type.lower()))
-        if isinstance(description_type, str):
-            rules.expressions.append(Exact(field="description", value=description_type.lower()))
         return rules
 
     def parse_json_value(self, value: RawJSONElement) -> RawJSONObject:
