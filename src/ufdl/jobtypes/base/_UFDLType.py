@@ -137,3 +137,7 @@ class UFDLType(Generic[TypeArgsType, PythonType]):
                     The serialised value.
         """
         raise NotImplementedError(self.format_python_value.__name__)
+
+    def __str__(self) -> str:
+        from ..util import format_type_or_type_class
+        return format_type_or_type_class(self)
