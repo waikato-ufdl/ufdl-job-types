@@ -77,15 +77,12 @@ class UFDLType(Generic[TypeArgsType, PythonType]):
         :param other:
                     The type to check for inheritance.
         """
+        from ..util import is_subtype
         return (
                 isinstance(self, type(other))
                 and
                 all(
-                        (
-                                isinstance(type_arg, (str, int))
-                                and type_arg == other_type_arg
-                        )
-                        or type_arg.is_subtype_of(other_type_arg)
+                        is_subtype(type_arg, other_type_arg)
                         for type_arg, other_type_arg in zip(self._type_args, other._type_args)
                 )
         )
