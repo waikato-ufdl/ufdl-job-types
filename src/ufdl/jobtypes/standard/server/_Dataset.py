@@ -5,11 +5,14 @@ from ufdl.json.core.filter.field import Exact
 from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
 
-from ...base import ServerResidentType
+from ...base import NamedServerType
 from ._Domain import Domain
 
 
-class Dataset(ServerResidentType[Tuple[Union[Domain, Type[Domain]]], RawJSONObject]):
+class Dataset(NamedServerType[Tuple[Union[Domain, Type[Domain]]], RawJSONObject]):
+    def extract_name(self, value: RawJSONObject) -> str:
+        return f"{value['name']} v{value['version']}"
+
     def server_table_name(self) -> str:
         domain_type = self.type_args[0]
         if isinstance(domain_type, Domain):
