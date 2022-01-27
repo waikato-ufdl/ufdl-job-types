@@ -17,7 +17,7 @@ class Domain(ServerResidentType[Tuple[StrType], RawJSONObject]):
         rules = FilterSpec(expressions=[])
         name_type = self.type_args[0]
         if isinstance(name_type, str):
-            rules.expressions.append(Exact(field="name", value=name_type.lower()))
+            rules.expressions.append(Exact(field="description", value=name_type.lower()))
         return rules
 
     def parse_json_value(self, value: RawJSONElement) -> RawJSONObject:

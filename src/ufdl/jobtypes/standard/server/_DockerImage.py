@@ -26,9 +26,7 @@ class DockerImage(
         rules = FilterSpec(expressions=[])
         domain_type, framework_type = self.type_args
         if isinstance(domain_type, Domain):
-            name_type, description_type = domain_type.type_args
-            if isinstance(name_type, str):
-                rules.expressions.append(Exact(field="domain.name", value=name_type))
+            description_type = domain_type.type_args
             if isinstance(description_type, str):
                 rules.expressions.append(Exact(field="domain.description", value=description_type))
         if isinstance(framework_type, Framework):

@@ -11,15 +11,20 @@ from ._Domain import Domain
 
 class Dataset(ServerResidentType[Tuple[Union[Domain, Type[Domain]]], RawJSONObject]):
     def server_table_name(self) -> str:
+        domain_type = self.type_args[0]
+        if isinstance(domain_type, Domain):
+            description_type = domain_type.type_args[0]
+            if isinstance(description_type, str):
+                return f"{description_type.replace(' ', '')}Dataset"
         return "Dataset"
 
     def filter_rules(self) -> FilterSpec:
         rules = FilterSpec(expressions=[])
         domain_type = self.type_args[0]
         if isinstance(domain_type, Domain):
-            name_type = domain_type.type_args[0]
-            if isinstance(name_type, str):
-                rules.expressions.append(Exact(field="domain.name", value=name_type))
+            description_type = domain_type.type_args[0]
+            if isinstance(description_type, str):
+                rules.expressions.append(Exact(field="domain.description", value=description_type))
         return rules
 
     def parse_json_value(self, value: RawJSONElement) -> RawJSONObject:
