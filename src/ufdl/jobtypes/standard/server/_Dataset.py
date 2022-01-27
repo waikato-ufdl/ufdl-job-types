@@ -1,4 +1,4 @@
-from typing import Dict, Tuple, Type, Union
+from typing import Tuple, Type, Union
 
 from ufdl.json.core.filter import FilterSpec
 from ufdl.json.core.filter.field import Exact

@@ -6,7 +6,7 @@ from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
 
 from ...base import ServerResidentType
-from ..._type import StrType
+from ...util import StrType
 
 
 class Domain(ServerResidentType[Tuple[StrType], RawJSONObject]):

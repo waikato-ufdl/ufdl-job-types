@@ -7,8 +7,7 @@ from wai.json.schema import JSONSchema, enum
 
 from ..base import PythonType, UFDLType, ServerResidentType
 from ..initialise import download_function
-from ..util import format_type_or_type_class
-from .._type import AnyUFDLType
+from ..util import format_type_or_type_class, AnyUFDLType
 
 
 class JobOutput(ServerResidentType[Tuple[UFDLType[Tuple[AnyUFDLType, ...], PythonType]], PythonType]):

@@ -1,4 +1,4 @@
-from typing import Dict, Tuple, Type
+from typing import Tuple, Type
 
 from ufdl.json.core.filter import FilterSpec
 from ufdl.json.core.filter.field import Exact
@@ -6,7 +6,7 @@ from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema, standard_object, string_schema
 
 from ...base import ServerResidentType
-from ..._type import StrType
+from ...util import StrType
 
 
 class Framework(ServerResidentType[Tuple[StrType, StrType], RawJSONObject]):
