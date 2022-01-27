@@ -37,7 +37,7 @@ def parse_simple_json_value(type: AnySimpleType, value: RawJSONElement) -> Any:
     return value
 
 
-def format_json_value(type: AnySimpleType, value: Any) -> RawJSONElement:
+def format_simple_json_value(type: AnySimpleType, value: Any) -> RawJSONElement:
     validate_with_schema(type, value)
     return value
 
