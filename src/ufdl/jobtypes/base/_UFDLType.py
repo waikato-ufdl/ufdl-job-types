@@ -112,7 +112,7 @@ class UFDLType(Generic[TypeArgsType, PythonType]):
                     - str, indicating that the type argument should be a string value.
                     - int, indicating that the type argument should be an int value.
         """
-        raise NotImplementedError(cls.type_params_expected_base_types.__name__)
+        return tuple()
 
     @abstractmethod
     def parse_binary_value(self, value: bytes) -> PythonType:

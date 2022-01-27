@@ -112,13 +112,17 @@ def split_args(arg_string: str) -> List[str]:
             depth += 1
         elif char == ">":
             depth -= 1
-            if depth < 0:
-                raise ValueError(f"Unbalanced brackets at position {index} in argument string '{arg_string}'")
+            if depth == 0:
+                break
         elif char == "," and depth == 1:
             result.append(arg_string[start:index].strip())
             start = index + 1
 
     if depth != 0:
         raise ValueError(f"Unclosed brackets in arg_string '{arg_string}'")
+    if index != len(arg_string) - 1:
+        raise ValueError(f"Extra content after closing brace: {arg_string[index + 1:]}")
+
+    result.append(arg_string[start:index].strip())
 
     return result

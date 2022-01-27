@@ -1,4 +1,5 @@
 import builtins
+import itertools
 from typing import Callable, Dict, List, Optional, Union
 
 from ufdl.json.core.filter import FilterSpec
@@ -14,7 +15,7 @@ RetrieveFunction = Callable[[str, int], RawJSONObject]
 DownloadFunction = Callable[[str, int], bytes]
 
 # Name/type mappings
-RESERVED_TYPES = {"str": str, "int": int}
+RESERVED_TYPES = {"str": str, "int": int, "float": float, "bool": bool}
 NAME_TO_TYPE_MAP: Optional[Dict[str, type]] = None
 TYPE_TO_NAME_MAP: Optional[Dict[type, str]] = None
 
@@ -44,12 +45,12 @@ def initialise_server(
     # Verify and reverse the name/type mapping
     NAME_TO_TYPE_MAP = {}
     TYPE_TO_NAME_MAP = {}
-    for name, type in zip(RESERVED_TYPES.items(), name_to_type_map.items()):
+    for name, type in itertools.chain(RESERVED_TYPES.items(), name_to_type_map.items()):
         if name in NAME_TO_TYPE_MAP:
             raise ValueError(f"Type-name '{name}' is reserved")
         if not name.isidentifier():
             raise ValueError(f"Type-name '{name}' is not a valid Python identifier")
-        if not isinstance(type, builtins.type) or not issubclass(type, UFDLType):
+        if not isinstance(type, builtins.type) or not issubclass(type, UFDLType) and type not in RESERVED_TYPES.values():
             raise ValueError(f"Type must be a sub-class of {UFDLType.__name__}")
         if type in TYPE_TO_NAME_MAP:
             raise ValueError(f"Multiple type-names detected for type {type}; mapping is not one-to-one")

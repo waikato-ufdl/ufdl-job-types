@@ -7,7 +7,6 @@ from wai.common.serialisation.serialisers import IntSerialiser, FloatSerialiser,
 
 from ._const import SIMPLE_TYPES
 from ._format import format_type
-from ._json import validate_with_schema
 from ._type import AnyUFDLType, AnySimpleType
 
 SERIALISERS = {
@@ -33,11 +32,13 @@ def get_simple_schema(type: AnySimpleType) -> JSONSchema:
 
 
 def parse_simple_json_value(type: AnySimpleType, value: RawJSONElement) -> Any:
+    from ._json import validate_with_schema
     validate_with_schema(get_simple_schema(type), value)
     return value
 
 
 def format_simple_json_value(type: AnySimpleType, value: Any) -> RawJSONElement:
+    from ._json import validate_with_schema
     validate_with_schema(type, value)
     return value
 
