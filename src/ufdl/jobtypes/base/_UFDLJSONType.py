@@ -51,3 +51,15 @@ class UFDLJSONType(
         The schema used by this type to validate input data.
         """
         raise NotImplementedError(self.json_schema.__name__)
+
+    def validate_with_schema(self, value: RawJSONElement):
+        """
+        Uses the type's schema to validate a value.
+
+        :param schema:
+                    The schema to use for validation.
+        :param value:
+                    The value to validate.
+        """
+        from ..util import validate_with_schema
+        validate_with_schema(self.json_schema, value)
