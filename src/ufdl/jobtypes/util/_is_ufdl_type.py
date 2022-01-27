@@ -1,6 +1,7 @@
 from typing import Any
 
 from ..base import UFDLType
+from ._const import SIMPLE_TYPES
 
 
 def is_ufdl_type(value: Any) -> bool:
@@ -13,8 +14,7 @@ def is_ufdl_type(value: Any) -> bool:
     if isinstance(value, type):
         return (
                 issubclass(value, UFDLType)
-                or value is str
-                or value is int
+                or value in SIMPLE_TYPES
         )
 
-    return isinstance(value, (UFDLType, str, int))
+    return isinstance(value, (UFDLType, *SIMPLE_TYPES))

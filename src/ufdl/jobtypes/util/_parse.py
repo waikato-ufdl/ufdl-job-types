@@ -1,8 +1,9 @@
 from typing import List, Tuple
 
-from .._type import AnyUFDLType
 from ..error import UnknownTypeNameException, TypeParsingException
 from ..initialise import name_type_translate
+from ._const import TRUE_CONST_SYMBOL, FALSE_CONST_SYMBOL, SIMPLE_TYPES
+from ._type import AnyUFDLType
 
 
 def parse_type(
@@ -15,14 +16,31 @@ def parse_type(
                 The type's string representation.
     :return:
     """
+    # Remove whitespace
+    type_string = type_string.strip()
+
     # If the argument is single-quoted, it is a string-constant type argument
     if type_string.startswith("'") and type_string.endswith("'"):
         return type_string[1:-1].replace("\\'", "'")
 
+    # If int() can parse it, it's an int const type
+    # (must be before float as float() can parse ints)
     try:
         return int(type_string)
     except ValueError:
         pass
+
+    # If float() can parse it, it's a float const type
+    try:
+        return float(type_string)
+    except ValueError:
+        pass
+
+    # Check if it's one of the boolean const types
+    if type_string == TRUE_CONST_SYMBOL:
+        return True
+    elif type_string == FALSE_CONST_SYMBOL:
+        return False
 
     args_start = type_string.find("<")
     if args_start == -1:
@@ -37,7 +55,7 @@ def parse_type(
     if type_class is None:
         raise UnknownTypeNameException(name)
 
-    if type_class is str or type_class is int:
+    if type_class in SIMPLE_TYPES:
         if args != "":
             raise TypeParsingException(type_string)
         return type_class

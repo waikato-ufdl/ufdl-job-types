@@ -1,7 +1,6 @@
 import json
 from abc import abstractmethod
 
-import jsonschema
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema
 
@@ -52,25 +51,3 @@ class UFDLJSONType(
         The schema used by this type to validate input data.
         """
         raise NotImplementedError(self.json_schema.__name__)
-
-    def validate_with_schema(self, value: RawJSONElement):
-        """
-        Uses the type's schema to validate a value.
-
-        :param value:
-                    The value to validate.
-        """
-        # Get our schema
-        schema: JSONSchema = self.json_schema
-
-        # Get the validator class
-        validator_type = jsonschema.validators.validator_for(schema)
-
-        # Check the schema is valid
-        validator_type.check_schema(schema)
-
-        # Create the instance
-        validator = validator_type(schema)
-
-        # Perform schema validation
-        validator.validate(value)

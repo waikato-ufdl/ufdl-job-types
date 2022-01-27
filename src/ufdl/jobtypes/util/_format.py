@@ -2,7 +2,8 @@ from typing import Optional, Type, Union
 
 from ..base import UFDLType
 from ..initialise import name_type_translate
-from .._type import AnyUFDLType
+from ._const import SIMPLE_TYPES, TRUE_CONST_SYMBOL, FALSE_CONST_SYMBOL
+from ._type import AnyUFDLType
 
 
 def format_type_args_or_params(
@@ -81,17 +82,23 @@ def format_type(
                 The formatted string representation of the type argument/parameter.
     """
     # Type parameters which are str or int are represented by str or int
-    if isinstance(type_arg, type) and type_arg in (str, int):
+    if isinstance(type_arg, type) and type_arg in SIMPLE_TYPES:
         return str(type_arg)
 
     # String-value type arguments are single-quoted, with internal single-quotes backslash-escaped
-    elif isinstance(type_arg, str):
+    if isinstance(type_arg, str):
         formatted_str_type_arg = type_arg.replace("'", "\\'")
         return f"'{formatted_str_type_arg}'"
 
     # Integer-value type arguments are just the number itself
-    if isinstance(type_arg, int):
+    if isinstance(type_arg, (int, float)):
         return str(type_arg)
+
+    # Bool-value types have special constant representations
+    if type_arg is True:
+        return TRUE_CONST_SYMBOL
+    elif type_arg is False:
+        return FALSE_CONST_SYMBOL
 
     # Otherwise the argument/parameter is a type/type-class, so its representation
     # is the type's/type-class' own representation

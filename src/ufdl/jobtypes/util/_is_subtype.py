@@ -1,8 +1,9 @@
 import builtins
 
 from ..base import UFDLType
-from .._type import AnyUFDLType
+from ._const import SIMPLE_TYPES
 from ._is_ufdl_type import is_ufdl_type
+from ._type import AnyUFDLType
 
 
 def is_subtype(
@@ -19,7 +20,7 @@ def is_subtype(
         if issubclass(of, UFDLType):
             return isinstance(type, of) or isinstance(type, builtins.type) and issubclass(type, of)
         else:
-            assert of is str or of is int
+            assert of in SIMPLE_TYPES
             return isinstance(type, of) or type is of
 
     elif isinstance(of, UFDLType):
@@ -33,5 +34,5 @@ def is_subtype(
             )
 
     else:
-        assert isinstance(of, (str, int))
+        assert isinstance(of, SIMPLE_TYPES)
         return builtins.type(type) is builtins.type(of) and type == of
