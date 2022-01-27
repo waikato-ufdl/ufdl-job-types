@@ -81,9 +81,9 @@ def format_type(
     :return:
                 The formatted string representation of the type argument/parameter.
     """
-    # Type parameters which are str or int are represented by str or int
+    # Simple type parameters are represented by their type name
     if isinstance(type_arg, type) and type_arg in SIMPLE_TYPES:
-        return str(type_arg)
+        return name_type_translate(type_arg)
 
     # String-value type arguments are single-quoted, with internal single-quotes backslash-escaped
     if isinstance(type_arg, str):
