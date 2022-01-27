@@ -33,5 +33,5 @@ class Domain(ServerResidentType[Tuple[StrType], RawJSONObject]):
         raise NotImplementedError(self.json_schema.__name__)
 
     @classmethod
-    def type_params_expected_base_types(cls) -> Tuple[Type[str], Type[str]]:
-        return str, str
+    def type_params_expected_base_types(cls) -> Tuple[Type[str]]:
+        return str,

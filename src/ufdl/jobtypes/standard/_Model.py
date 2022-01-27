@@ -1,10 +1,15 @@
-from typing import Tuple, Type
+from typing import Tuple, Type, Union
 
 from ..base import UFDLType
-from .server import Domain
+from .server import Domain, Framework
 
 
-class Model(UFDLType[Tuple[Domain], bytes]):
+class Model(
+    UFDLType[
+        Tuple[Union[Domain, Type[Domain]], Union[Framework, Type[Framework]]],
+        bytes
+    ]
+):
     def parse_binary_value(self, value: bytes) -> bytes:
         return value
 
@@ -12,5 +17,5 @@ class Model(UFDLType[Tuple[Domain], bytes]):
         return value
 
     @classmethod
-    def type_params_expected_base_types(cls) -> Tuple[Type[Domain]]:
-        return Domain,
+    def type_params_expected_base_types(cls) -> Tuple[Type[Domain], Type[Framework]]:
+        return Domain, Framework
