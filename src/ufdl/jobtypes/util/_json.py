@@ -4,9 +4,10 @@ import jsonschema
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema
 
-from ._simple import is_simple_type
-from ._type import AnyUFDLType
 from ..base import UFDLJSONType
+from ._format import format_type
+from ._simple import is_simple_type, parse_simple_json_value
+from ._type import AnyUFDLType
 
 
 def is_json_compatible(type: AnyUFDLType) -> bool:
@@ -21,6 +22,19 @@ def is_json_compatible(type: AnyUFDLType) -> bool:
         or isinstance(type, UFDLJSONType)
         or isinstance(type, builtins.type) and issubclass(type, UFDLJSONType)
     )
+
+
+def parse_json_value(type: AnyUFDLType, value: RawJSONElement):
+    if is_simple_type(type):
+        return parse_simple_json_value(type, value)
+
+    if isinstance(type, builtins.type) and issubclass(type, UFDLJSONType):
+        type = type.type_base_equivalent()
+
+    if isinstance(type, UFDLJSONType):
+        return type.parse_json_value(value)
+
+    raise ValueError(f"{format_type(type)} is not JSON-compatible")
 
 
 def validate_with_schema(schema: JSONSchema, value: RawJSONElement):
