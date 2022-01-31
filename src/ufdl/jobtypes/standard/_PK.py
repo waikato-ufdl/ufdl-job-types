@@ -3,7 +3,7 @@ from typing import Tuple, Type
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, enum
 
-from ..base import ServerResidentType, UFDLJSONType
+from ..base import ServerResidentType, UFDLJSONType, UFDLType
 
 
 class PK(UFDLJSONType[Tuple[ServerResidentType], int]):
@@ -26,5 +26,5 @@ class PK(UFDLJSONType[Tuple[ServerResidentType], int]):
         )
 
     @classmethod
-    def type_params_expected_base_types(cls) -> Tuple[Type[ServerResidentType]]:
-        return ServerResidentType,
+    def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
+        return ServerResidentType(),

@@ -6,7 +6,8 @@ provide implementations that make REST API calls to the server instance.
 """
 from ._initialisation import (
     initialise_server,
-    name_type_translate,
+    name_translate,
+    type_translate,
     list_function,
     retrieve_function,
     download_function

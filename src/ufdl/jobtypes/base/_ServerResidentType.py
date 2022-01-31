@@ -5,19 +5,15 @@ from ufdl.json.core.filter import FilterSpec
 
 from wai.json.raw import RawJSONElement
 
-from ..initialise import list_function
 from ._UFDLJSONType import UFDLJSONType, TypeArgsType, PythonType
 
 
 class ServerResidentType(
-    UFDLJSONType[TypeArgsType, PythonType],
-    abstract=True
+    UFDLJSONType[TypeArgsType, PythonType]
 ):
-    @abstractmethod
     def server_table_name(self) -> str:
         raise NotImplementedError(self.server_table_name.__name__)
 
-    @abstractmethod
     def filter_rules(self) -> FilterSpec:
         raise NotImplementedError(self.filter_rules.__name__)
 
@@ -25,6 +21,7 @@ class ServerResidentType(
         """
         Gets a list of all applicable values from the server.
         """
+        from ..initialise import list_function
         return [
             self.parse_json_value(value)
             for value in list_function(self.server_table_name(), self.filter_rules())

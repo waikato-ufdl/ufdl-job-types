@@ -7,17 +7,21 @@ from wai.json.schema import JSONSchema, enum
 
 from ..base import PythonType, UFDLType, ServerResidentType
 from ..initialise import download_function
-from ..util import format_type_or_type_class, AnyUFDLType
 
 
-class JobOutput(ServerResidentType[Tuple[UFDLType[Tuple[AnyUFDLType, ...], PythonType]], PythonType]):
+class JobOutput(
+    ServerResidentType[
+        Tuple[UFDLType[Tuple[UFDLType, ...], PythonType]],
+        PythonType
+    ]
+):
     def server_table_name(self) -> str:
         return "JobOutput"
 
     def filter_rules(self) -> FilterSpec:
         return FilterSpec(
             expressions=[
-                Exact(field="type", value=format_type_or_type_class(self.type_args[0]))
+                Exact(field="type", value=str(self.type_args[0]))
             ]
         )
 
@@ -42,5 +46,5 @@ class JobOutput(ServerResidentType[Tuple[UFDLType[Tuple[AnyUFDLType, ...], Pytho
         )
 
     @classmethod
-    def type_params_expected_base_types(cls) -> Tuple[Type[UFDLType]]:
-        return UFDLType,
+    def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
+        return UFDLType(),

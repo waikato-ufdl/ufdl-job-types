@@ -5,11 +5,10 @@ from ufdl.json.core.filter.field import Exact
 from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema, standard_object, string_schema
 
-from ...base import ServerResidentType
-from ...util import StrType
+from ...base import ServerResidentType, String, UFDLType
 
 
-class Framework(ServerResidentType[Tuple[StrType, StrType], RawJSONObject]):
+class Framework(ServerResidentType[Tuple[String, String], RawJSONObject]):
     def server_table_name(self) -> str:
         return "Framework"
 
@@ -37,5 +36,5 @@ class Framework(ServerResidentType[Tuple[StrType, StrType], RawJSONObject]):
         )
 
     @classmethod
-    def type_params_expected_base_types(cls) -> Tuple[Type[str], Type[str]]:
-        return str, str
+    def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
+        return String(), String()

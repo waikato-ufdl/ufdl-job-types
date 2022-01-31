@@ -1,13 +1,17 @@
-from typing import Tuple, Type
+from typing import Tuple
 
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, regular_array
 
-from ...base import TypeArgsType, UFDLJSONType, PythonType
-from ...util import IntType
+from ...base import TypeArgsType, UFDLJSONType, PythonType, Integer, UFDLType
 
 
-class Array(UFDLJSONType[Tuple[UFDLJSONType[TypeArgsType, PythonType], IntType], Tuple[PythonType]]):
+class Array(
+    UFDLJSONType[
+        Tuple[UFDLJSONType[TypeArgsType, PythonType], Integer],
+        Tuple[PythonType, ...]
+    ]
+):
     def parse_json_value(self, value: RawJSONElement) -> Tuple[PythonType]:
         self.validate_with_schema(value)
         element_type = self.type_args[0]
@@ -44,5 +48,5 @@ class Array(UFDLJSONType[Tuple[UFDLJSONType[TypeArgsType, PythonType], IntType],
         )
 
     @classmethod
-    def type_params_expected_base_types(cls) -> Tuple[Type[UFDLJSONType], Type[int]]:
-        return UFDLJSONType, int
+    def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
+        return UFDLJSONType.type_base_equivalent(), Integer()

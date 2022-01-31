@@ -6,11 +6,12 @@ from ._ServerResidentType import ServerResidentType, TypeArgsType
 from ._UFDLJSONType import PythonType
 
 
-class NamedServerType(ServerResidentType[TypeArgsType, PythonType], ABC):
+class NamedServerType(
+    ServerResidentType[TypeArgsType, PythonType]
+):
     """
     Server types from which we can extract a unique name.
     """
-    @abstractmethod
     def extract_name(self, value: RawJSONObject) -> str:
         """
         Gets the name of the value from its JSON representation.

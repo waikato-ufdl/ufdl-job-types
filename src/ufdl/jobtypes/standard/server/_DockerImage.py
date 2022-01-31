@@ -5,14 +5,14 @@ from ufdl.json.core.filter.field import Exact
 from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
 
-from ...base import NamedServerType
+from ...base import NamedServerType, UFDLType
 from ._Domain import Domain
 from ._Framework import Framework
 
 
 class DockerImage(
     NamedServerType[
-        Tuple[Union[Domain, Type[Domain]], Union[Framework, Type[Framework]]],
+        Tuple[Domain, Framework],
         RawJSONObject
     ]
 ):
@@ -51,5 +51,5 @@ class DockerImage(
         raise NotImplementedError(self.json_schema.__name__)
 
     @classmethod
-    def type_params_expected_base_types(cls) -> Tuple[Type[Domain], Type[Framework]]:
-        return Domain, Framework
+    def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
+        return Domain(), Framework()

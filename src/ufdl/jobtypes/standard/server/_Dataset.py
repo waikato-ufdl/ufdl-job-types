@@ -5,11 +5,13 @@ from ufdl.json.core.filter.field import Exact
 from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
 
-from ...base import NamedServerType
+from ...base import NamedServerType, UFDLType
 from ._Domain import Domain
 
 
-class Dataset(NamedServerType[Tuple[Union[Domain, Type[Domain]]], RawJSONObject]):
+class Dataset(
+    NamedServerType[Tuple[Domain], RawJSONObject]
+):
     def extract_name(self, value: RawJSONObject) -> str:
         return f"{value['name']} v{value['version']}"
 
@@ -43,5 +45,5 @@ class Dataset(NamedServerType[Tuple[Union[Domain, Type[Domain]]], RawJSONObject]
         raise NotImplementedError(self.json_schema.__name__)
 
     @classmethod
-    def type_params_expected_base_types(cls) -> Tuple[Type[Domain]]:
-        return Domain,
+    def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
+        return Domain(),

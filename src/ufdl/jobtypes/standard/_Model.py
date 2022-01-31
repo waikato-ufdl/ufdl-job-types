@@ -6,7 +6,7 @@ from .server import Domain, Framework
 
 class Model(
     UFDLType[
-        Tuple[Union[Domain, Type[Domain]], Union[Framework, Type[Framework]]],
+        Tuple[Domain, Framework],
         bytes
     ]
 ):
@@ -17,5 +17,5 @@ class Model(
         return value
 
     @classmethod
-    def type_params_expected_base_types(cls) -> Tuple[Type[Domain], Type[Framework]]:
-        return Domain, Framework
+    def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
+        return Domain(), Framework()

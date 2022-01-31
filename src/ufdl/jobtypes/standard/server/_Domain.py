@@ -1,15 +1,14 @@
-from typing import Tuple, Type
+from typing import Tuple
 
 from ufdl.json.core.filter import FilterSpec
 from ufdl.json.core.filter.field import Exact
 from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
 
-from ...base import ServerResidentType
-from ...util import StrType
+from ...base import ServerResidentType, String, UFDLType
 
 
-class Domain(ServerResidentType[Tuple[StrType], RawJSONObject]):
+class Domain(ServerResidentType[Tuple[String], RawJSONObject]):
     def server_table_name(self) -> str:
         return "DataDomain"
 
@@ -33,5 +32,5 @@ class Domain(ServerResidentType[Tuple[StrType], RawJSONObject]):
         raise NotImplementedError(self.json_schema.__name__)
 
     @classmethod
-    def type_params_expected_base_types(cls) -> Tuple[Type[str]]:
-        return str,
+    def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
+        return String(),
