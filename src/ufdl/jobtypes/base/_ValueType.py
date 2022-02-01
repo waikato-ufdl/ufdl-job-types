@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Tuple, Type, Union
+from typing import Optional, Tuple, Type, Union
 from weakref import WeakValueDictionary
 
 from wai.json.raw import RawJSONElement
@@ -25,6 +25,11 @@ VALUE_TYPES = str, int, float, bool
 
 class ValueType(UFDLJSONType[Tuple[()], PythonType], ABC):
     _instances = WeakValueDictionary()
+    _value: Optional[AnyValueType] = None
+
+    @classmethod
+    def value(cls) -> Optional[AnyValueType]:
+        return cls._value
 
     @staticmethod
     def generate_subclass(value: AnyValueType) -> Type['ValueType']:
@@ -49,6 +54,8 @@ class ValueType(UFDLJSONType[Tuple[()], PythonType], ABC):
         )
 
         class SpecialisedValueType(base_class):
+            _value = value
+
             def parse_json_value(self, value: RawJSONElement):
                 self.validate_with_schema(value)
                 return value
