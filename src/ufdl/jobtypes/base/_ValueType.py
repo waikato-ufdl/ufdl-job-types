@@ -23,7 +23,7 @@ FALSE_CONST_SYMBOL = "@false"
 VALUE_TYPES = str, int, float, bool
 
 
-class ValueType(UFDLJSONType[Tuple[()], PythonType], ABC):
+class ValueType(UFDLJSONType[Tuple[()], Union[str, float, int, bool]], ABC):
     _instances = WeakValueDictionary()
     _value: Optional[AnyValueType] = None
 
@@ -56,14 +56,6 @@ class ValueType(UFDLJSONType[Tuple[()], PythonType], ABC):
         class SpecialisedValueType(base_class):
             _value = value
 
-            def parse_json_value(self, value: RawJSONElement):
-                self.validate_with_schema(value)
-                return value
-
-            def format_python_value_to_json(self, value) -> RawJSONElement:
-                self.validate_with_schema(value)
-                return value
-
             @property
             def json_schema(self) -> JSONSchema:
                 return schema
@@ -93,6 +85,14 @@ class ValueType(UFDLJSONType[Tuple[()], PythonType], ABC):
         ValueType._instances[value] = SpecialisedValueType
 
         return SpecialisedValueType
+
+    def parse_json_value(self, value: RawJSONElement):
+        self.validate_with_schema(value)
+        return value
+
+    def format_python_value_to_json(self, value) -> RawJSONElement:
+        self.validate_with_schema(value)
+        return value
 
     @property
     def json_schema(self) -> JSONSchema:
