@@ -125,6 +125,9 @@ def split_args(arg_string: str) -> List[str]:
     if index != len(arg_string) - 1:
         raise ValueError(f"Extra content after closing brace: {arg_string[index + 1:]}")
 
-    result.append(arg_string[start:index].strip())
+    last_arg = arg_string[start:index].strip()
+
+    if last_arg != "":
+        result.append(last_arg)
 
     return result
