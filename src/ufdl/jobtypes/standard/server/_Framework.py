@@ -3,7 +3,7 @@ from typing import Tuple
 from ufdl.json.core.filter import FilterSpec
 from ufdl.json.core.filter.field import Exact
 from wai.json.raw import RawJSONElement, RawJSONObject
-from wai.json.schema import JSONSchema, standard_object, string_schema
+from wai.json.schema import JSONSchema, standard_object, string_schema, number
 
 from ...base import ServerResidentType, String, UFDLType
 
@@ -32,7 +32,11 @@ class Framework(ServerResidentType[Tuple[String, String], RawJSONObject]):
     @property
     def json_schema(self) -> JSONSchema:
         return standard_object(
-            {"name": string_schema(max_length=32), "version": string_schema(max_length=32)}
+            {
+                "pk": number(minimum=1, integer_only=True),
+                "name": string_schema(max_length=32),
+                "version": string_schema(max_length=32)
+            }
         )
 
     @classmethod
