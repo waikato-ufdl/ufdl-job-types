@@ -1,7 +1,7 @@
 from typing import List, Tuple, Union
 
 from ..base import UFDLType, ValueType, TRUE_CONST_SYMBOL, FALSE_CONST_SYMBOL
-from ..error import UnknownTypeNameException, TypeParsingException
+from ..error import TypeParsingException
 from ..initialise import name_translate
 
 
@@ -15,6 +15,9 @@ def parse_type(
                 The type's string representation.
     :return:
     """
+    if not isinstance(type_string, str):
+        raise TypeParsingException(str(type_string), "Not a string")
+
     # Remove whitespace
     type_string = type_string.strip()
 
@@ -33,17 +36,15 @@ def parse_type(
     type_class = name_translate(name)
 
     if type_class is None:
-        raise UnknownTypeNameException(name)
+        raise TypeParsingException(type_string, f"Unknown type-name \"{name}\"")
 
     if args == "":
         return type_class()
 
     try:
-        parsed_args = parse_args(args)
+        return type_class(parse_args(args))
     except Exception as e:
-        raise TypeParsingException(type_string) from e
-
-    return type_class(parsed_args)
+        raise TypeParsingException(type_string, e) from e
 
 
 def try_parse_value_type(type_string: str) -> Union[str, int, float, bool, None]:
@@ -98,7 +99,7 @@ def split_args(arg_string: str) -> List[str]:
                 A list of the individual arguments.
     """
     if not arg_string.startswith("<") or not arg_string.endswith(">"):
-        raise ValueError(f"Arguments must be bracketed by <>; got {arg_string}")
+        raise ValueError(f"Arguments must be bracketed by <>; got \"{arg_string}\"")
 
     depth = 0
     quoted = False
@@ -120,10 +121,12 @@ def split_args(arg_string: str) -> List[str]:
             result.append(arg_string[start:index].strip())
             start = index + 1
 
+    if quoted:
+        raise ValueError(f"Unclosed quotes in \"{arg_string}\"")
     if depth != 0:
-        raise ValueError(f"Unclosed brackets in arg_string '{arg_string}'")
+        raise ValueError(f"Unclosed brackets in arg_string \"{arg_string}\"")
     if index != len(arg_string) - 1:
-        raise ValueError(f"Extra content after closing brace: {arg_string[index + 1:]}")
+        raise ValueError(f"Extra content after closing brace in \"{arg_string}\": \"{arg_string[index + 1:]}\"")
 
     last_arg = arg_string[start:index].strip()
 
