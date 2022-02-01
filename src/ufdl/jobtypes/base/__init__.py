@@ -1,6 +1,7 @@
 """
 The base hierarchy of types that the UFDL server uses for jobs.
 """
+from ._FiniteJSONType import FiniteJSONType
 from ._NamedServerType import NamedServerType
 from ._ServerResidentType import ServerResidentType
 from ._UFDLJSONType import UFDLJSONType
