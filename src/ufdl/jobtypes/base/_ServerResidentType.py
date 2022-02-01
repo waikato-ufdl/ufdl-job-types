@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from typing import List
 
 from ufdl.json.core.filter import FilterSpec
@@ -22,7 +21,4 @@ class ServerResidentType(
         Gets a list of all applicable values from the server.
         """
         from ..initialise import list_function
-        return [
-            self.parse_json_value(value)
-            for value in list_function(self.server_table_name(), self.filter_rules())
-        ]
+        return list_function(self.server_table_name(), self.filter_rules())
