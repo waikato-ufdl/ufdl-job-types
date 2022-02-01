@@ -16,11 +16,6 @@ class Dataset(
         return f"{value['name']} v{value['version']}"
 
     def server_table_name(self) -> str:
-        domain_type = self.type_args[0]
-        if isinstance(domain_type, Domain):
-            description_type = domain_type.type_args[0].value()
-            if isinstance(description_type, str):
-                return f"{description_type.replace(' ', '')}Dataset"
         return "Dataset"
 
     def filter_rules(self) -> FilterSpec:
