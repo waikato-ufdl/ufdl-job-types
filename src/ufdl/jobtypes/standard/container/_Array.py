@@ -34,8 +34,6 @@ class Array(
     @property
     def json_schema(self) -> JSONSchema:
         element_type, size_type = self.type_args
-        if not isinstance(element_type, UFDLJSONType):
-            element_type = element_type.type_base_equivalent()
         kwargs = {}
         if isinstance(size_type, int):
             kwargs = {
@@ -49,4 +47,4 @@ class Array(
 
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
-        return UFDLJSONType.type_base_equivalent(), Integer()
+        return UFDLJSONType(), Integer()

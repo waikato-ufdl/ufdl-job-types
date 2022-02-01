@@ -3,7 +3,7 @@ from typing import Dict, Tuple, Type
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, standard_object
 
-from ufdl.jobtypes.base import TypeArgsType, UFDLJSONType, PythonType
+from ufdl.jobtypes.base import TypeArgsType, UFDLJSONType, PythonType, UFDLType
 
 
 class Map(UFDLJSONType[Tuple[UFDLJSONType[TypeArgsType, PythonType]], Dict[str, PythonType]]):
@@ -32,5 +32,5 @@ class Map(UFDLJSONType[Tuple[UFDLJSONType[TypeArgsType, PythonType]], Dict[str, 
         )
 
     @classmethod
-    def type_params_expected_base_types(cls) -> Tuple[Type[UFDLJSONType]]:
-        return UFDLJSONType,
+    def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
+        return UFDLJSONType(),
