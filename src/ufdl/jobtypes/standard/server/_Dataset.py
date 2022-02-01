@@ -18,7 +18,7 @@ class Dataset(
     def server_table_name(self) -> str:
         domain_type = self.type_args[0]
         if isinstance(domain_type, Domain):
-            description_type = domain_type.type_args[0]
+            description_type = domain_type.type_args[0].value()
             if isinstance(description_type, str):
                 return f"{description_type.replace(' ', '')}Dataset"
         return "Dataset"
@@ -27,7 +27,7 @@ class Dataset(
         rules = FilterSpec(expressions=[])
         domain_type = self.type_args[0]
         if isinstance(domain_type, Domain):
-            description_type = domain_type.type_args[0]
+            description_type = domain_type.type_args[0].value()
             if isinstance(description_type, str):
                 rules.expressions.append(Exact(field="domain.description", value=description_type))
         return rules
