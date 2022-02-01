@@ -3,8 +3,7 @@ from typing import Tuple
 from ufdl.json.core.filter import FilterSpec
 from ufdl.json.core.filter.field import Exact
 from wai.json.raw import RawJSONElement, RawJSONObject
-from wai.json.schema import JSONSchema, IS_JSON_SCHEMA, IS_JSON_DEFINITION
-from wai.json.schema.constants import DEFINITIONS_KEYWORD
+from wai.json.schema import JSONSchema, standard_object, number, string_schema
 
 from ...base import NamedServerType, UFDLType
 from ._Domain import Domain
@@ -49,10 +48,13 @@ class DockerImage(
 
     @property
     def json_schema(self) -> JSONSchema:
-        return {
-            DEFINITIONS_KEYWORD: IS_JSON_DEFINITION,
-            **IS_JSON_SCHEMA
-        }
+        return standard_object(
+            {
+                "pk": number(minimum=1, integer_only=True),
+                "name": string_schema(max_length=64),
+                "version": string_schema(max_length=32)
+            }
+        )
 
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
