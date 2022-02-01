@@ -1,4 +1,4 @@
-from typing import Tuple, Type, Union
+from typing import Tuple
 
 from ..base import UFDLType
 from .server import Domain, Framework
