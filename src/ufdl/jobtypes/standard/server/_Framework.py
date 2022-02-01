@@ -1,4 +1,4 @@
-from typing import Tuple, Type
+from typing import Tuple
 
 from ufdl.json.core.filter import FilterSpec
 from ufdl.json.core.filter.field import Exact
@@ -15,10 +15,10 @@ class Framework(ServerResidentType[Tuple[String, String], RawJSONObject]):
     def filter_rules(self) -> FilterSpec:
         rules = FilterSpec(expressions=[])
         name_type, version_type = self.type_args
-        if isinstance(name_type, str):
-            rules.expressions.append(Exact(field="name", value=name_type))
-        if isinstance(version_type, str):
-            rules.expressions.append(Exact(field="version", value=version_type))
+        if isinstance(name_type.value(), str):
+            rules.expressions.append(Exact(field="name", value=name_type.value()))
+        if isinstance(version_type.value(), str):
+            rules.expressions.append(Exact(field="version", value=version_type.value()))
         return rules
 
     def parse_json_value(self, value: RawJSONElement) -> RawJSONObject:
