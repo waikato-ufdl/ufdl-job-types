@@ -24,12 +24,7 @@ class PK(FiniteJSONType[Tuple[ServerResidentType], int]):
 
     @property
     def json_schema(self) -> JSONSchema:
-        return enum(
-            *(
-                value['pk']
-                for value in self.type_args[0].list_all_values()
-            )
-        )
+        return enum(*self.list_all_values())
 
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
