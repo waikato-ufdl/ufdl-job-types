@@ -164,3 +164,7 @@ class UFDLType(Generic[TypeArgsType, PythonType]):
             raise ValueError(f"Unnamed type {cls}")
 
         return type_class_name
+
+    @property
+    def is_abstract(self) -> bool:
+        return True

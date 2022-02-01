@@ -57,3 +57,7 @@ class DockerImage(
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
         return Domain(), Framework()
+
+    @property
+    def is_abstract(self) -> bool:
+        return False

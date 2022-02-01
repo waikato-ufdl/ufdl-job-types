@@ -102,6 +102,10 @@ class ValueType(UFDLJSONType[Tuple[()], Union[str, float, int, bool]], ABC):
             BOOL_SCHEMA
         )
 
+    @property
+    def is_abstract(self) -> bool:
+        return False
+
 
 String = ValueType.generate_subclass(str)
 Integer = ValueType.generate_subclass(int)

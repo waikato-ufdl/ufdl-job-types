@@ -34,3 +34,7 @@ class PK(FiniteJSONType[Tuple[ServerResidentType], int]):
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
         return ServerResidentType(),
+
+    @property
+    def is_abstract(self) -> bool:
+        return self.type_args[0].is_abstract

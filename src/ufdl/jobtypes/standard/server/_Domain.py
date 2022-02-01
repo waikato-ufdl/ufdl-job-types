@@ -34,3 +34,7 @@ class Domain(ServerResidentType[Tuple[String], RawJSONObject]):
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
         return String(),
+
+    @property
+    def is_abstract(self) -> bool:
+        return False

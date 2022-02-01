@@ -48,3 +48,7 @@ class Array(
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
         return UFDLJSONType(), Integer()
+
+    @property
+    def is_abstract(self) -> bool:
+        return self.type_args[0].is_abstract

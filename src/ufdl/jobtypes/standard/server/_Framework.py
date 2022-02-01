@@ -38,3 +38,7 @@ class Framework(ServerResidentType[Tuple[String, String], RawJSONObject]):
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
         return String(), String()
+
+    @property
+    def is_abstract(self) -> bool:
+        return False

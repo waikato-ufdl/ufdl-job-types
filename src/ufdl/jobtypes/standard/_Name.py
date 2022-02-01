@@ -28,3 +28,7 @@ class Name(UFDLJSONType[Tuple[NamedServerType], str]):
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
         return NamedServerType(),
+
+    @property
+    def is_abstract(self) -> bool:
+        return self.type_args[0].is_abstract
