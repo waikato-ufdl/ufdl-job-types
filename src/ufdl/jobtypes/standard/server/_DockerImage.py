@@ -26,15 +26,15 @@ class DockerImage(
         rules = FilterSpec(expressions=[])
         domain_type, framework_type = self.type_args
         if isinstance(domain_type, Domain):
-            description_type = domain_type.type_args
-            if isinstance(description_type, str):
-                rules.expressions.append(Exact(field="domain.description", value=description_type))
+            description_type = domain_type.type_args[0]
+            if isinstance(description_type.value(), str):
+                rules.expressions.append(Exact(field="domain.description", value=description_type.value()))
         if isinstance(framework_type, Framework):
             name_type, version_type = framework_type.type_args
-            if isinstance(name_type, str):
-                rules.expressions.append(Exact(field="framework.name", value=name_type))
-            if isinstance(version_type, str):
-                rules.expressions.append(Exact(field="framework.version", value=version_type))
+            if isinstance(name_type.value(), str):
+                rules.expressions.append(Exact(field="framework.name", value=name_type.value()))
+            if isinstance(version_type.value(), str):
+                rules.expressions.append(Exact(field="framework.version", value=version_type.value()))
 
         return rules
 
