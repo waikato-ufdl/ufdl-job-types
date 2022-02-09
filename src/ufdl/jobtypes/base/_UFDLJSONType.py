@@ -1,5 +1,5 @@
 import json
-from abc import abstractmethod
+from typing import IO, Union
 
 import jsonschema
 from wai.json.raw import RawJSONElement
@@ -14,8 +14,12 @@ class UFDLJSONType(
     """
     TODO
     """
-    def parse_binary_value(self, value: bytes) -> PythonType:
-        return self.parse_json_value(json.loads(value.decode("UTF-8")))
+    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> PythonType:
+        json_load_func = (
+            json.loads if isinstance(value, bytes)
+            else json.load
+        )
+        return self.parse_json_value(json_load_func(value))
 
     def parse_json_value(self, value: RawJSONElement) -> PythonType:
         """
@@ -28,7 +32,7 @@ class UFDLJSONType(
         """
         raise NotImplementedError(self.parse_json_value.__name__)
 
-    def format_python_value(self, value: PythonType) -> bytes:
+    def format_python_value(self, value: PythonType) -> Union[bytes, IO[bytes]]:
         return json.dumps(self.format_python_value_to_json(value)).encode("UTF-8")
 
     def format_python_value_to_json(self, value: PythonType) -> RawJSONElement:

@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Generic, Optional, Tuple, TypeVar
+from typing import Generic, IO, Optional, Tuple, TypeVar, Union
 
 from wai.common.meta import instanceoptionalmethod
 
@@ -103,7 +103,7 @@ class UFDLType(Generic[TypeArgsType, PythonType]):
         """
         return tuple()
 
-    def parse_binary_value(self, value: bytes) -> PythonType:
+    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> PythonType:
         """
         Parses a raw value supplied as binary into the Python-type.
 
@@ -114,7 +114,7 @@ class UFDLType(Generic[TypeArgsType, PythonType]):
         """
         raise NotImplementedError(self.parse_binary_value.__name__)
 
-    def format_python_value(self, value: PythonType) -> bytes:
+    def format_python_value(self, value: PythonType) -> Union[bytes, IO[bytes]]:
         """
         Formats a Python value into binary.
 

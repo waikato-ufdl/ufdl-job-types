@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import IO, Tuple, Union
 
 from ..base import UFDLType
 from .server import Domain, Framework
@@ -10,10 +10,12 @@ class Model(
         bytes
     ]
 ):
-    def parse_binary_value(self, value: bytes) -> bytes:
-        return value
+    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> bytes:
+        if isinstance(value, bytes):
+            return value
+        return value.read()
 
-    def format_python_value(self, value: bytes) -> bytes:
+    def format_python_value(self, value: bytes) -> Union[bytes, IO[bytes]]:
         return value
 
     @classmethod
