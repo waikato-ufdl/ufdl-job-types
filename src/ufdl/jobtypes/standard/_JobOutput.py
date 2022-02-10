@@ -1,6 +1,6 @@
-from typing import Tuple, Type
+from typing import List, Tuple
 
-from ufdl.json.core.filter import FilterSpec
+from ufdl.json.core.filter import FilterExpression
 from ufdl.json.core.filter.field import Exact
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, enum
@@ -18,12 +18,10 @@ class JobOutput(
     def server_table_name(self) -> str:
         return "JobOutput"
 
-    def filter_rules(self) -> FilterSpec:
-        return FilterSpec(
-            expressions=[
-                Exact(field="type", value=str(self.type_args[0]))
-            ]
-        )
+    def filter_rules(self) -> List[FilterExpression]:
+        return [
+            Exact(field="type", value=str(self.type_args[0]))
+        ]
 
     def parse_json_value(self, value: RawJSONElement) -> PythonType:
         if not isinstance(value, int):
@@ -41,7 +39,7 @@ class JobOutput(
         return enum(
             *(
                 value['pk']
-                for value in self.list_all_values()
+                for value in self.list_all_json_values()
             )
         )
 

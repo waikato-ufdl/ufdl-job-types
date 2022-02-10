@@ -8,8 +8,8 @@ from ._UFDLJSONType import UFDLJSONType, TypeArgsType, PythonType
 class FiniteJSONType(
     UFDLJSONType[TypeArgsType, PythonType]
 ):
-    def list_all_values(self) -> List[RawJSONElement]:
+    def list_all_json_values(self) -> List[RawJSONElement]:
         """
         Gets a list of all applicable values from the server.
         """
-        raise NotImplementedError(self.list_all_values.__name__)
+        raise NotImplementedError(self.list_all_json_values.__name__)
