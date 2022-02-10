@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Optional, Tuple, overload
 
 from ufdl.json.core.filter import FilterSpec
 from ufdl.json.core.filter.field import Exact
@@ -9,6 +9,19 @@ from ...base import ServerResidentType, String, UFDLType
 
 
 class Framework(ServerResidentType[Tuple[String, String], RawJSONObject]):
+    @overload
+    def __init__(self, name: str, version: str): ...
+    @overload
+    def __init__(self, type_args: Optional[Tuple[String, String]] = None): ...
+
+    def __init__(self, *args):
+        if len(args) == 0:
+            super().__init__(None)
+        elif len(args) == 1:
+            super().__init__(args[0])
+        else:
+            super().__init__((String.generate_subclass(args[0]), String.generate_subclass(args[1])))
+
     def server_table_name(self) -> str:
         return "Framework"
 
