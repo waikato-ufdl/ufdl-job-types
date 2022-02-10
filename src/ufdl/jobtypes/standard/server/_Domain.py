@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Optional, Tuple, Union
 
 from ufdl.json.core.filter import FilterSpec
 from ufdl.json.core.filter.field import Exact
@@ -9,6 +9,11 @@ from ...base import ServerResidentType, String, UFDLType
 
 
 class Domain(ServerResidentType[Tuple[String], RawJSONObject]):
+    def __init__(self, type_args: Union[str, Optional[Tuple[String]]] = None):
+        if isinstance(type_args, str):
+            type_args = (String.generate_subclass(type_args),)
+        super().__init__(type_args)
+
     def server_table_name(self) -> str:
         return "DataDomain"
 
