@@ -1,6 +1,7 @@
 """
 The types of errors that this library can raise.
 """
+from ._ExpectationError import ExpectationError, expect
 from ._IsNotSubtypeException import IsNotSubtypeException
 from ._NotInitialisedException import NotInitialisedException
 from ._SupportsNoInputException import SupportsNoInputException
