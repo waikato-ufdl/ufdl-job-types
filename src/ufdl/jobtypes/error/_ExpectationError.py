@@ -16,7 +16,7 @@ ExpectedType = TypeVar('ExpectedType')
 
 
 def expect(
-        expected_type: Union[Type[ExpectedType], Tuple[Type[ExpectedType]], ...],
+        expected_type: Union[Type[ExpectedType], Tuple[Type[ExpectedType], ...]],
         received_value
 ) -> ExpectedType:
     """
