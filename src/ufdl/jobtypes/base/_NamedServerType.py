@@ -4,11 +4,11 @@ from ufdl.json.core.filter import FilterExpression
 from wai.json.raw import RawJSONObject
 
 from ._ServerResidentType import ServerResidentType, TypeArgsType
-from ._UFDLJSONType import PythonType
+from ._UFDLJSONType import InputType, OutputType
 
 
 class NamedServerType(
-    ServerResidentType[TypeArgsType, PythonType]
+    ServerResidentType[TypeArgsType, InputType, OutputType]
 ):
     """
     Server types from which we can extract a unique name.
@@ -49,3 +49,14 @@ class NamedServerType(
         if len(results) == 0:
             return None
         return results[0]
+
+    def get_python_value_by_name(self, name: str) -> InputType:
+        """
+        TODO
+        :param name:
+        :return:
+        """
+        json_value = self.get_json_value_by_name(name)
+        if json_value is None:
+            raise Exception(f"Failed to get JSON value by name \"{name}\"")
+        return self.parse_json_value(json_value)

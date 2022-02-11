@@ -1,28 +1,35 @@
-from io import BytesIO
+from io import BytesIO, BufferedIOBase
 from typing import IO, Tuple, Union
 from zipfile import ZipFile
 
-from ...base import PythonType, UFDLType, Integer
+from ...base import InputType, OutputType, UFDLType, Integer
+from ...error import expect
 
 
 class Compressed(
     UFDLType[
-        Tuple[UFDLType[Tuple[UFDLType, ...], PythonType], Integer],
-        PythonType
+        Tuple[UFDLType[Tuple[UFDLType, ...], InputType, OutputType], Integer],
+        InputType,
+        OutputType
     ]
 ):
     """
     Handles compression/decompression of values.
     """
-    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> PythonType:
+    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> InputType:
+        expect((bytes, BufferedIOBase), value)
+        compression = self.type_args[1].value()
+        expect(int, compression)
         if isinstance(value, bytes):
             value = BytesIO(value)
-        with ZipFile(value, "r", compression=self.type_args[1].value()) as zf:
+        with ZipFile(value, "r", compression=compression) as zf:
             return self.type_args[0].parse_binary_value(zf.read("data"))
 
-    def format_python_value(self, value: PythonType) -> Union[bytes, IO[bytes]]:
+    def format_python_value(self, value: OutputType) -> Union[bytes, IO[bytes]]:
+        compression = self.type_args[1].value()
+        expect(int, compression)
         buffer = BytesIO()
-        with ZipFile(buffer, "w", compression=self.type_args[1].value()) as zf:
+        with ZipFile(buffer, "w", compression=compression) as zf:
             zf.writestr("data", self.type_args[0].format_python_value(value))
         buffer.seek(0)
         return buffer

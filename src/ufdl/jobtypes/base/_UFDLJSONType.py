@@ -5,23 +5,23 @@ import jsonschema
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema
 
-from ._UFDLType import UFDLType, TypeArgsType, PythonType
+from ._UFDLType import UFDLType, TypeArgsType, InputType, OutputType
 
 
 class UFDLJSONType(
-    UFDLType[TypeArgsType, PythonType]
+    UFDLType[TypeArgsType, InputType, OutputType]
 ):
     """
     TODO
     """
-    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> PythonType:
+    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> InputType:
         json_load_func = (
             json.loads if isinstance(value, bytes)
             else json.load
         )
         return self.parse_json_value(json_load_func(value))
 
-    def parse_json_value(self, value: RawJSONElement) -> PythonType:
+    def parse_json_value(self, value: RawJSONElement) -> InputType:
         """
         Parses a raw value supplied as JSON into the Python-type.
 
@@ -32,10 +32,10 @@ class UFDLJSONType(
         """
         raise NotImplementedError(self.parse_json_value.__name__)
 
-    def format_python_value(self, value: PythonType) -> Union[bytes, IO[bytes]]:
+    def format_python_value(self, value: OutputType) -> Union[bytes, IO[bytes]]:
         return json.dumps(self.format_python_value_to_json(value)).encode("UTF-8")
 
-    def format_python_value_to_json(self, value: PythonType) -> RawJSONElement:
+    def format_python_value_to_json(self, value: OutputType) -> RawJSONElement:
         """
         Formats a Python value into JSON.
 

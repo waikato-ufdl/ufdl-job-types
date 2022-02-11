@@ -11,7 +11,7 @@ from ._Domain import Domain
 
 
 class Dataset(
-    NamedServerType[Tuple[Domain], RawJSONObject]
+    NamedServerType[Tuple[Domain], RawJSONObject, RawJSONObject]
 ):
     def name_filter(self, name: str) -> FilterExpression:
         name, version = parse_v_name(name)

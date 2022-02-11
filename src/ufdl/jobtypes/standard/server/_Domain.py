@@ -8,7 +8,13 @@ from wai.json.schema import JSONSchema, standard_object, number, string_schema
 from ...base import ServerResidentType, String, UFDLType
 
 
-class Domain(ServerResidentType[Tuple[String], RawJSONObject]):
+class Domain(
+    ServerResidentType[
+        Tuple[String],
+        RawJSONObject,
+        RawJSONObject
+    ]
+):
     def __init__(self, type_args: Union[str, Optional[Tuple[String]]] = None):
         if isinstance(type_args, str):
             type_args = (String.generate_subclass(type_args),)

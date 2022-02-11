@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from typing import Generic, IO, Optional, Tuple, TypeVar, Union
 
 from wai.common.meta import instanceoptionalmethod
@@ -10,11 +9,12 @@ TypeArgsType = TypeVar(
     bound=Tuple['UFDLType', ...]
 )
 
-# The Python type that is used to represent values of a UFDLType on a worker node
-PythonType = TypeVar('PythonType')
+# The Python types that is used to represent values of a UFDLType on a worker node
+InputType = TypeVar('InputType')
+OutputType = TypeVar('OutputType')
 
 
-class UFDLType(Generic[TypeArgsType, PythonType]):
+class UFDLType(Generic[TypeArgsType, InputType, OutputType]):
     """
     Base class for all types used by the UFDL system.
     """
@@ -103,7 +103,7 @@ class UFDLType(Generic[TypeArgsType, PythonType]):
         """
         return tuple()
 
-    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> PythonType:
+    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> InputType:
         """
         Parses a raw value supplied as binary into the Python-type.
 
@@ -114,7 +114,7 @@ class UFDLType(Generic[TypeArgsType, PythonType]):
         """
         raise NotImplementedError(self.parse_binary_value.__name__)
 
-    def format_python_value(self, value: PythonType) -> Union[bytes, IO[bytes]]:
+    def format_python_value(self, value: OutputType) -> Union[bytes, IO[bytes]]:
         """
         Formats a Python value into binary.
 

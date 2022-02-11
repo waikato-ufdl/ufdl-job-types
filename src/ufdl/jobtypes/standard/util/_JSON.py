@@ -10,6 +10,7 @@ from ...base import UFDLJSONType, UFDLType
 class JSON(
     UFDLJSONType[
         tuple,
+        RawJSONElement,
         RawJSONElement
     ]
 ):

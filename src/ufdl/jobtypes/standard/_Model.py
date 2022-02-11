@@ -1,21 +1,24 @@
+from io import BufferedIOBase
 from typing import IO, Tuple, Union
 
 from ..base import UFDLType
+from ..error import expect
 from .server import Domain, Framework
 
 
 class Model(
     UFDLType[
         Tuple[Domain, Framework],
-        bytes
+        Union[bytes, IO[bytes]],
+        Union[bytes, IO[bytes]]
     ]
 ):
-    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> bytes:
-        if isinstance(value, bytes):
-            return value
-        return value.read()
+    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> Union[bytes, IO[bytes]]:
+        expect((bytes, BufferedIOBase), value)
+        return value
 
-    def format_python_value(self, value: bytes) -> Union[bytes, IO[bytes]]:
+    def format_python_value(self, value: Union[bytes, IO[bytes]]) -> Union[bytes, IO[bytes]]:
+        expect((bytes, BufferedIOBase), value)
         return value
 
     @classmethod

@@ -3,19 +3,25 @@ from typing import List, Tuple
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, enum
 
-from ..base import FiniteJSONType, NamedServerType, UFDLType, PythonType
+from ..base import FiniteJSONType, NamedServerType, UFDLType, InputType, OutputType
+from ..error import expect
 
 
-class Name(FiniteJSONType[Tuple[NamedServerType[tuple, PythonType]], PythonType]):
-    def parse_json_value(self, value: RawJSONElement) -> PythonType:
+class Name(
+    FiniteJSONType[
+        Tuple[NamedServerType[tuple, InputType, OutputType]],
+        InputType,
+        str
+    ]
+):
+    def parse_json_value(self, value: RawJSONElement) -> InputType:
+        expect(str, value)
+        sub_type = self.type_args[0]
+        return sub_type.get_python_value_by_name(value)
+
+    def format_python_value_to_json(self, value: str) -> RawJSONElement:
         self.validate_with_schema(value)
-        sub_type = self.type_args[0]
-        return sub_type.parse_json_value(sub_type.get_json_value_by_name(value))
-
-    def format_python_value_to_json(self, value: PythonType) -> RawJSONElement:
-        sub_type = self.type_args[0]
-        json_value = sub_type.format_python_value_to_json(value)
-        return sub_type.extract_name_from_json(json_value)
+        return value
 
     def list_all_json_values(self) -> List[RawJSONElement]:
         sub_type = self.type_args[0]

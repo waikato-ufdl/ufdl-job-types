@@ -1,11 +1,10 @@
-from abc import ABC
 from typing import Optional, Tuple, Type, Union
 from weakref import WeakValueDictionary
 
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, any_of, string_schema, number, BOOL_SCHEMA, constant
 
-from ._UFDLJSONType import UFDLJSONType, PythonType
+from ._UFDLJSONType import UFDLJSONType
 
 # Types
 StrType = Union[str, Type[str]]
@@ -13,6 +12,7 @@ IntType = Union[int, Type[int]]
 BoolType = Union[bool, Type[bool]]
 FloatType = Union[float, Type[float]]
 AnyValueType = Union[StrType, IntType, BoolType, FloatType]
+AnyValue = Union[str, float, int, bool]
 
 # String representations of the true and false value-types
 TRUE_CONST_SYMBOL = "@true"
@@ -23,7 +23,7 @@ FALSE_CONST_SYMBOL = "@false"
 VALUE_TYPES = str, int, float, bool
 
 
-class ValueType(UFDLJSONType[Tuple[()], Union[str, float, int, bool]], ABC):
+class ValueType(UFDLJSONType[Tuple[()], AnyValue, AnyValue]):
     _instances = WeakValueDictionary()
     _value: Optional[AnyValueType] = None
 
@@ -49,7 +49,7 @@ class ValueType(UFDLJSONType[Tuple[()], Union[str, float, int, bool]], ABC):
             raise Exception(f"Can't generate value-schema for {value}")
 
         base_class = (
-            ValueType[Tuple[()], value] if isinstance(value, type)
+            ValueType[Tuple[()], value, value] if isinstance(value, type)
             else ValueType.generate_subclass(type(value))
         )
 

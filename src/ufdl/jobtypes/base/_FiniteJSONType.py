@@ -2,11 +2,11 @@ from typing import List
 
 from wai.json.raw import RawJSONElement
 
-from ._UFDLJSONType import UFDLJSONType, TypeArgsType, PythonType
+from ._UFDLJSONType import UFDLJSONType, TypeArgsType, InputType, OutputType
 
 
 class FiniteJSONType(
-    UFDLJSONType[TypeArgsType, PythonType]
+    UFDLJSONType[TypeArgsType, InputType, OutputType]
 ):
     def list_all_json_values(self) -> List[RawJSONElement]:
         """

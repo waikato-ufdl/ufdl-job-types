@@ -4,11 +4,11 @@ from ufdl.json.core.filter import FilterExpression, FilterSpec
 
 from wai.json.raw import RawJSONElement
 
-from ._FiniteJSONType import FiniteJSONType, TypeArgsType, PythonType
+from ._FiniteJSONType import FiniteJSONType, TypeArgsType, InputType, OutputType
 
 
 class ServerResidentType(
-    FiniteJSONType[TypeArgsType, PythonType]
+    FiniteJSONType[TypeArgsType, InputType, OutputType]
 ):
     def server_table_name(self) -> str:
         raise NotImplementedError(self.server_table_name.__name__)

@@ -8,7 +8,13 @@ from wai.json.schema import JSONSchema, standard_object, string_schema, number
 from ...base import ServerResidentType, String, UFDLType
 
 
-class Framework(ServerResidentType[Tuple[String, String], RawJSONObject]):
+class Framework(
+    ServerResidentType[
+        Tuple[String, String],
+        RawJSONObject,
+        RawJSONObject
+    ]
+):
     @overload
     def __init__(self, name: str, version: str): ...
     @overload

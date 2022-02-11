@@ -3,16 +3,18 @@ from typing import Tuple
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, regular_array
 
-from ...base import TypeArgsType, UFDLJSONType, PythonType, Integer, UFDLType
+from ...base import TypeArgsType, UFDLJSONType, InputType, OutputType, Integer, UFDLType
+from ...error import expect
 
 
 class Array(
     UFDLJSONType[
-        Tuple[UFDLJSONType[TypeArgsType, PythonType], Integer],
-        Tuple[PythonType, ...]
+        Tuple[UFDLJSONType[TypeArgsType, InputType, OutputType], Integer],
+        Tuple[InputType, ...],
+        Tuple[OutputType, ...]
     ]
 ):
-    def parse_json_value(self, value: RawJSONElement) -> Tuple[PythonType]:
+    def parse_json_value(self, value: RawJSONElement) -> Tuple[InputType, ...]:
         self.validate_with_schema(value)
         element_type = self.type_args[0]
         return tuple(
@@ -20,9 +22,8 @@ class Array(
             for element in value
         )
 
-    def format_python_value_to_json(self, value: Tuple[PythonType]) -> RawJSONElement:
-        if not isinstance(value, tuple):
-            raise ValueError(f"Expected tuple, got {type(value)}")
+    def format_python_value_to_json(self, value: Tuple[OutputType, ...]) -> RawJSONElement:
+        expect(tuple, value)
         element_type, size_type = self.type_args
         if isinstance(size_type, int) and len(value) != size_type:
             raise ValueError(f"Expected tuple of size {size_type}")

@@ -14,6 +14,7 @@ from ._Framework import Framework
 class DockerImage(
     NamedServerType[
         Tuple[Domain, Framework],
+        RawJSONObject,
         RawJSONObject
     ]
 ):
