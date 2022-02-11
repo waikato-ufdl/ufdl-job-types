@@ -1,11 +1,11 @@
-from typing import Type, TypeVar
+from typing import Tuple, Type, TypeVar, Union
 
 
 class ExpectationError(Exception):
     """
     Class of exception for when the wrong type is passed to a function.
     """
-    def __init__(self, expected_type: type, received_value):
+    def __init__(self, expected_type: Union[type, Tuple[type, ...]], received_value):
         super().__init__(
             f"Expected {expected_type}, received: ({type(received_value)}) {received_value}"
         )
@@ -15,7 +15,10 @@ class ExpectationError(Exception):
 ExpectedType = TypeVar('ExpectedType')
 
 
-def expect(expected_type: Type[ExpectedType], received_value) -> ExpectedType:
+def expect(
+        expected_type: Union[Type[ExpectedType], Tuple[Type[ExpectedType]], ...],
+        received_value
+) -> ExpectedType:
     """
     TODO
     :param expected_type:
