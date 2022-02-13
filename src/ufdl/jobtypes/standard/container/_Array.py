@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Optional, Tuple, overload
 
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, regular_array
@@ -14,6 +14,16 @@ class Array(
         Tuple[OutputType, ...]
     ]
 ):
+    @overload
+    def __init__(self, element_type: UFDLJSONType): ...
+    @overload
+    def __init__(self, type_args: Optional[TypeArgsType] = None): ...
+
+    def __init__(self, *args):
+        if len(args) == 1 and isinstance(args[0], UFDLType):
+            args = args,
+        super().__init__(args)
+
     def parse_json_value(self, value: RawJSONElement) -> Tuple[InputType, ...]:
         self.validate_with_schema(value)
         element_type = self.type_args[0]
