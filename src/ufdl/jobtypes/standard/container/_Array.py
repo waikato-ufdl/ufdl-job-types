@@ -25,7 +25,7 @@ class Array(
     def format_python_value_to_json(self, value: Tuple[OutputType, ...]) -> RawJSONElement:
         expect(tuple, value)
         element_type, size_type = self.type_args
-        if isinstance(size_type, int) and len(value) != size_type:
+        if isinstance(size_type.value(), int) and len(value) != size_type.value():
             raise ValueError(f"Expected tuple of size {size_type}")
         return [
             element_type.format_python_value_to_json(element)
@@ -36,10 +36,10 @@ class Array(
     def json_schema(self) -> JSONSchema:
         element_type, size_type = self.type_args
         kwargs = {}
-        if isinstance(size_type, int):
+        if isinstance(size_type.value(), int):
             kwargs = {
-                "min_elements": size_type,
-                "max_elements": size_type
+                "min_elements": size_type.value(),
+                "max_elements": size_type.value()
             }
         return regular_array(
             element_type.json_schema,
