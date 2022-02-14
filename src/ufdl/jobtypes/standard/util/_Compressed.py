@@ -22,15 +22,13 @@ class Compressed(
     def __init__(self, type_args: Optional[Tuple[UFDLType[Tuple[UFDLType, ...], InputType, OutputType], Integer]] = None): ...
 
     def __init__(self, *args):
-        if len(args) == 0:
-            args = tuple()
-        elif len(args) == 1:
+        if len(args) == 1:
             if isinstance(args[0], UFDLType):
                 args = args[0], Integer()
         else:
             args = args[0], Integer.generate_subclass(args[1]), args[2:]
 
-        super().__init__(args)
+        super().__init__(*args)
 
     def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> InputType:
         expect((bytes, BufferedIOBase), value)
