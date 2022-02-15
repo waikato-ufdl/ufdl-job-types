@@ -3,25 +3,39 @@ from typing import Optional, Tuple, overload
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, regular_array
 
-from ...base import TypeArgsType, UFDLJSONType, InputType, OutputType, Integer, UFDLType
+from ...base import UFDLJSONType, InputType, OutputType, Integer, UFDLType
 from ...error import expect
 
 
 class Array(
     UFDLJSONType[
-        Tuple[UFDLJSONType[TypeArgsType, InputType, OutputType], Integer],
+        Tuple[UFDLJSONType[tuple, InputType, OutputType], Integer],
         Tuple[InputType, ...],
         Tuple[OutputType, ...]
     ]
 ):
     @overload
-    def __init__(self, element_type: UFDLJSONType): ...
+    def __init__(self, element_type: UFDLJSONType, size_type: Optional[int] = None): ...
     @overload
-    def __init__(self, type_args: Optional[TypeArgsType] = None): ...
+    def __init__(self, type_args: Tuple[UFDLJSONType[tuple, InputType, OutputType]]): ...
+    @overload
+    def __init__(self, type_args: Optional[Tuple[UFDLJSONType[tuple, InputType, OutputType], Integer]] = None): ...
 
     def __init__(self, *args):
-        if len(args) == 1 and isinstance(args[0], UFDLType):
-            args = args,
+        if len(args) == 0:
+            args = None
+        elif len(args) == 1:
+            if isinstance(args[0], UFDLType):
+                args = args[0], Integer()
+            elif isinstance(args[0], tuple) and len(args[0]) == 1:
+                args = args[0][0], Integer()
+            elif args[0] is None:
+                args = None
+            else:
+                args = args[0]
+        else:
+            args = args[0], Integer() if args[1] is None else Integer.generate_subclass(args[1])
+
         super().__init__(args)
 
     def parse_json_value(self, value: RawJSONElement) -> Tuple[InputType, ...]:
