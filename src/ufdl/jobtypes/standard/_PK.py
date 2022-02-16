@@ -19,8 +19,8 @@ class PK(
     def __init__(
             self,
             type_args: Union[
-                ServerResidentType[tuple, InputType, OutputType],
-                Tuple[ServerResidentType[tuple, InputType, OutputType]],
+                ServerResidentType[tuple, InputType, Any],
+                Tuple[ServerResidentType[tuple, InputType, Any]],
                 None
             ] = None
     ):

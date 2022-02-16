@@ -17,8 +17,8 @@ class Name(
     def __init__(
             self,
             type_args: Union[
-                NamedServerType[tuple, InputType, OutputType],
-                Tuple[NamedServerType[tuple, InputType, OutputType]],
+                NamedServerType[tuple, InputType, Any],
+                Tuple[NamedServerType[tuple, InputType, Any]],
                 None
             ] = None
     ):
