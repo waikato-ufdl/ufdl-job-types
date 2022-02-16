@@ -1,18 +1,35 @@
 from typing import List, Optional, Tuple, overload
 
-from ufdl.json.core.filter import FilterExpression, FilterSpec
+from ufdl.json.core.filter import FilterExpression
 from ufdl.json.core.filter.field import Exact
-from wai.json.raw import RawJSONElement, RawJSONObject
-from wai.json.schema import JSONSchema, standard_object, string_schema, number
+from wai.json.object import OptionallyPresent, StrictJSONObject
+from wai.json.object.property import NumberProperty, StringProperty
+from wai.json.raw import RawJSONElement
+from wai.json.schema import JSONSchema
 
 from ...base import ServerResidentType, String, UFDLType
+from ...error import expect
+
+
+class FrameworkInstance(StrictJSONObject['FrameworkInstance']):
+    """
+    Represents an instance of a deep-learning framework
+    """
+    # The primary-key of the framework, if it was sent from the server
+    pk: OptionallyPresent[int] = NumberProperty(integer_only=True, minimum=1, optional=True)
+
+    # The name of the framework
+    name: str = StringProperty(max_length=32)
+
+    # The version of the framework
+    version: str = StringProperty(max_length=32)
 
 
 class Framework(
     ServerResidentType[
         Tuple[String, String],
-        RawJSONObject,
-        RawJSONObject
+        FrameworkInstance,
+        FrameworkInstance
     ]
 ):
     @overload
@@ -40,23 +57,16 @@ class Framework(
             rules.append(Exact(field="version", value=version_type.value()))
         return rules
 
-    def parse_json_value(self, value: RawJSONElement) -> RawJSONObject:
-        self.validate_with_schema(value)
-        return value
+    def parse_json_value(self, value: RawJSONElement) -> FrameworkInstance:
+        return FrameworkInstance.from_raw_json(value)
 
-    def format_python_value_to_json(self, value: RawJSONObject) -> RawJSONElement:
-        self.validate_with_schema(value)
-        return value
+    def format_python_value_to_json(self, value: FrameworkInstance) -> RawJSONElement:
+        expect(FrameworkInstance, value)
+        return value.to_raw_json()
 
     @property
     def json_schema(self) -> JSONSchema:
-        return standard_object(
-            {
-                "pk": number(minimum=1, integer_only=True),
-                "name": string_schema(max_length=32),
-                "version": string_schema(max_length=32)
-            }
-        )
+        return FrameworkInstance.get_json_validation_schema()
 
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
