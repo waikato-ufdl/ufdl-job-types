@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Optional, Tuple, overload
 
 from ufdl.json.core.filter import FilterExpression
 from ufdl.json.core.filter.field import Exact
@@ -46,6 +46,16 @@ class PretrainedModel(
         PretrainedModelInstance
     ]
 ):
+    @overload
+    def __init__(self, domain_type: Domain, framework_type: Framework): ...
+    @overload
+    def __init__(self, type_args: Optional[Tuple[Domain, Framework]] = None): ...
+
+    def __init__(self, *args):
+        if len(args) == 2:
+            args = args,
+        super().__init__(*args)
+
     def name_filter(self, name: str) -> FilterExpression:
         return Exact(field="name", value=name)
 
