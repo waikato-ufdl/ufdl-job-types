@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 from ufdl.json.core.filter.field import Exact
 
@@ -16,6 +16,18 @@ class PK(
         int
     ]
 ):
+    def __init__(
+            self,
+            type_args: Union[
+                ServerResidentType[tuple, InputType, OutputType],
+                Tuple[ServerResidentType[tuple, InputType, OutputType]],
+                None
+            ] = None
+    ):
+        if isinstance(type_args, ServerResidentType):
+            type_args = type_args,
+        super().__init__(type_args)
+
     def list_all_json_values(self) -> List[RawJSONElement]:
         return [
             value['pk']

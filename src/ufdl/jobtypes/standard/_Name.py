@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, enum
@@ -14,6 +14,18 @@ class Name(
         str
     ]
 ):
+    def __init__(
+            self,
+            type_args: Union[
+                NamedServerType[tuple, InputType, OutputType],
+                Tuple[NamedServerType[tuple, InputType, OutputType]],
+                None
+            ] = None
+    ):
+        if isinstance(type_args, NamedServerType):
+            type_args = type_args,
+        super().__init__(type_args)
+
     def parse_json_value(self, value: RawJSONElement) -> InputType:
         expect(str, value)
         sub_type = self.type_args[0]
