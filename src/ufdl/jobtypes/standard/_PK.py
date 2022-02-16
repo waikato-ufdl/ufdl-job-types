@@ -1,4 +1,4 @@
-from typing import List, Tuple, Union
+from typing import Any, List, Tuple, Union
 
 from ufdl.json.core.filter.field import Exact
 
@@ -11,7 +11,7 @@ from ..error import expect
 
 class PK(
     FiniteJSONType[
-        Tuple[ServerResidentType[tuple, InputType, OutputType]],
+        Tuple[ServerResidentType[tuple, InputType, Any]],
         InputType,
         int
     ]

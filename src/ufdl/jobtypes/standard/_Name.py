@@ -1,4 +1,4 @@
-from typing import List, Tuple, Union
+from typing import Any, List, Tuple, Union
 
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema, enum
@@ -9,7 +9,7 @@ from ..error import expect
 
 class Name(
     FiniteJSONType[
-        Tuple[NamedServerType[tuple, InputType, OutputType]],
+        Tuple[NamedServerType[tuple, InputType, Any]],
         InputType,
         str
     ]
