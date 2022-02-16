@@ -2,19 +2,48 @@ from typing import List, Tuple
 
 from ufdl.json.core.filter import FilterExpression
 from ufdl.json.core.filter.field import Exact
+
+from wai.json.object import OptionallyPresent, StrictJSONObject
+from wai.json.object.property import BoolProperty, NumberProperty, StringProperty
 from wai.json.raw import RawJSONElement, RawJSONObject
-from wai.json.schema import JSONSchema, standard_object, number, string_schema
+from wai.json.schema import JSONSchema
 
 from ...base import NamedServerType, UFDLType
 from ._Domain import Domain
-from ._Framework import Framework
+from ._Framework import Framework, FrameworkInstance
+from ...error import expect
+
+
+class PretrainedModelInstance(StrictJSONObject['PretrainedModelInstance']):
+    """
+    Instance-representation of a pre-trained model.
+    """
+    # The primary-key of the model, if it was sent by the server
+    pk: OptionallyPresent[int] = NumberProperty(integer_only=True, minimum=1, optional=True)
+
+    url: str = StringProperty()
+
+    name: OptionallyPresent[str] = StringProperty(optional=True)
+
+    description: OptionallyPresent[str] = StringProperty(optional=True)
+
+    # The framework of the model
+    framework: FrameworkInstance = FrameworkInstance.as_property()
+
+    domain: str = StringProperty()
+
+    licence: OptionallyPresent[str] = StringProperty()
+
+    data: bool = BoolProperty(optional=True, default=False)
+
+    metadata: OptionallyPresent[str] = StringProperty(optional=True)
 
 
 class PretrainedModel(
     NamedServerType[
         Tuple[Domain, Framework],
-        RawJSONObject,
-        RawJSONObject
+        PretrainedModelInstance,
+        PretrainedModelInstance
     ]
 ):
     def name_filter(self, name: str) -> FilterExpression:
@@ -42,22 +71,16 @@ class PretrainedModel(
 
         return rules
 
-    def parse_json_value(self, value: RawJSONElement) -> RawJSONObject:
-        self.validate_with_schema(value)
-        return value
+    def parse_json_value(self, value: RawJSONElement) -> PretrainedModelInstance:
+        return PretrainedModelInstance.from_raw_json(value)
 
-    def format_python_value_to_json(self, value: RawJSONObject) -> RawJSONElement:
-        self.validate_with_schema(value)
-        return value
+    def format_python_value_to_json(self, value: PretrainedModelInstance) -> RawJSONElement:
+        expect(PretrainedModelInstance, value)
+        return value.to_raw_json()
 
     @property
     def json_schema(self) -> JSONSchema:
-        return standard_object(
-            {
-                "pk": number(minimum=1, integer_only=True),
-                "name": string_schema(max_length=64)
-            }
-        )
+        return PretrainedModelInstance.get_json_validation_schema()
 
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
