@@ -2,17 +2,34 @@ from typing import List, Optional, Tuple, Union
 
 from ufdl.json.core.filter import FilterExpression
 from ufdl.json.core.filter.field import Exact
+from wai.json.object import OptionallyPresent, StrictJSONObject
+from wai.json.object.property import NumberProperty, StringProperty
 from wai.json.raw import RawJSONElement, RawJSONObject
-from wai.json.schema import JSONSchema, standard_object, number, string_schema
+from wai.json.schema import JSONSchema
 
 from ...base import NamedServerType, String, UFDLType
+from ...error import expect
+
+
+class DomainInstance(StrictJSONObject['DomainInstance']):
+    """
+    Represents an instance of a deep-learning domain.
+    """
+    # The primary-key of the domain, if it was sent from the server
+    pk: OptionallyPresent[int] = NumberProperty(integer_only=True, minimum=1, optional=True)
+
+    # The name of the domain
+    name: str = StringProperty(max_length=2)
+
+    # The description of the domain
+    description: str = StringProperty(max_length=32)
 
 
 class Domain(
     NamedServerType[
         Tuple[String],
-        RawJSONObject,
-        RawJSONObject
+        DomainInstance,
+        DomainInstance
     ]
 ):
     def __init__(self, type_args: Union[str, Optional[Tuple[String]]] = None):
@@ -36,23 +53,16 @@ class Domain(
             rules.append(Exact(field="description", value=name_type.lower()))
         return rules
 
-    def parse_json_value(self, value: RawJSONElement) -> RawJSONObject:
-        self.validate_with_schema(value)
-        return value
+    def parse_json_value(self, value: RawJSONElement) -> DomainInstance:
+        return DomainInstance.from_raw_json(value)
 
-    def format_python_value_to_json(self, value: RawJSONObject) -> RawJSONElement:
-        self.validate_with_schema(value)
-        return value
+    def format_python_value_to_json(self, value: DomainInstance) -> RawJSONElement:
+        expect(DomainInstance, value)
+        return value.to_raw_json()
 
     @property
     def json_schema(self) -> JSONSchema:
-        return standard_object(
-            {
-                "pk": number(minimum=1, integer_only=True),
-                "name": string_schema(max_length=2),
-                "description": string_schema(max_length=32)
-            }
-        )
+        return DomainInstance.get_json_validation_schema()
 
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
