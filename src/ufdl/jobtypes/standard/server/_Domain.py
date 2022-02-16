@@ -5,11 +5,11 @@ from ufdl.json.core.filter.field import Exact
 from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema, standard_object, number, string_schema
 
-from ...base import ServerResidentType, String, UFDLType
+from ...base import NamedServerType, String, UFDLType
 
 
 class Domain(
-    ServerResidentType[
+    NamedServerType[
         Tuple[String],
         RawJSONObject,
         RawJSONObject
@@ -19,6 +19,12 @@ class Domain(
         if isinstance(type_args, str):
             type_args = (String.generate_subclass(type_args),)
         super().__init__(type_args)
+
+    def extract_name_from_json(self, value: RawJSONObject) -> str:
+        return value['name']
+
+    def name_filter(self, name: str) -> FilterExpression:
+        return Exact(field='name', value=name)
 
     def server_table_name(self) -> str:
         return "DataDomain"
