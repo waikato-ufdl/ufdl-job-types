@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple, overload
+from typing import List, Optional, Tuple, Type, overload
 
 from ufdl.json.core.filter import FilterExpression
 from ufdl.json.core.filter.field import Exact
@@ -79,6 +79,21 @@ class PretrainedModel(
         if len(args) == 2:
             args = args,
         super().__init__(*args)
+        self._instance_class: Optional[Type[PretrainedModelInstance]] = None
+
+    @property
+    def instance_class(self):
+        if self._instance_class is None:
+            domain_type = self.type_args[0]
+            framework_type = self.type_args[1]
+
+            class SpecialisedPretrainedModelInstance(PretrainedModelInstance):
+                framework = framework_type.instance_class.as_property()
+                domain = domain_type.instance_class.description
+
+            self._instance_class = SpecialisedPretrainedModelInstance
+
+        return self._instance_class
 
     def name_filter(self, name: str) -> FilterExpression:
         return Exact(field="name", value=name)
@@ -106,15 +121,15 @@ class PretrainedModel(
         return rules
 
     def parse_json_value(self, value: RawJSONElement) -> PretrainedModelInstance:
-        return PretrainedModelInstance.from_raw_json(value)
+        return self.instance_class.from_raw_json(value)
 
     def format_python_value_to_json(self, value: PretrainedModelInstance) -> RawJSONElement:
-        expect(PretrainedModelInstance, value)
+        expect(self.instance_class, value)
         return value.to_raw_json()
 
     @property
     def json_schema(self) -> JSONSchema:
-        return PretrainedModelInstance.get_json_validation_schema()
+        return self.instance_class.get_json_validation_schema()
 
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:

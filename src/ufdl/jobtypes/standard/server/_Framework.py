@@ -1,9 +1,9 @@
-from typing import List, Optional, Tuple, overload
+from typing import List, Optional, Tuple, Type, overload
 
 from ufdl.json.core.filter import FilterExpression
 from ufdl.json.core.filter.field import Exact
 from wai.json.object import OptionallyPresent, StrictJSONObject
-from wai.json.object.property import NumberProperty, StringProperty
+from wai.json.object.property import ConstantProperty, NumberProperty, StringProperty
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema
 
@@ -19,10 +19,10 @@ class FrameworkInstance(StrictJSONObject['FrameworkInstance']):
     pk: OptionallyPresent[int] = NumberProperty(integer_only=True, minimum=1, optional=True)
 
     # The name of the framework
-    name: str = StringProperty(max_length=32)
+    name: str
 
     # The version of the framework
-    version: str = StringProperty(max_length=32)
+    version: str
 
 
 class Framework(
@@ -44,6 +44,28 @@ class Framework(
             super().__init__(args[0])
         else:
             super().__init__((String.generate_subclass(args[0])(), String.generate_subclass(args[1])()))
+        self._instance_class: Optional[Type[FrameworkInstance]] = None
+
+    @property
+    def instance_class(self):
+        if self._instance_class is None:
+            name_type = self.type_args[0].value()
+            version_type = self.type_args[1].value()
+
+            class SpecialisedFrameworkInstance(FrameworkInstance):
+                name = (
+                    ConstantProperty(value=name_type)
+                    if isinstance(name_type, str) else
+                    StringProperty(max_length=32)
+                )
+                version = (
+                    ConstantProperty(value=version_type)
+                    if isinstance(version_type, str) else
+                    StringProperty(max_length=32)
+                )
+
+            self._instance_class = SpecialisedFrameworkInstance
+        return self._instance_class
 
     def server_table_name(self) -> str:
         return "frameworks"
@@ -58,15 +80,15 @@ class Framework(
         return rules
 
     def parse_json_value(self, value: RawJSONElement) -> FrameworkInstance:
-        return FrameworkInstance.from_raw_json(value)
+        return self.instance_class.from_raw_json(value)
 
     def format_python_value_to_json(self, value: FrameworkInstance) -> RawJSONElement:
-        expect(FrameworkInstance, value)
+        expect(self.instance_class, value)
         return value.to_raw_json()
 
     @property
     def json_schema(self) -> JSONSchema:
-        return FrameworkInstance.get_json_validation_schema()
+        return self.instance_class.get_json_validation_schema()
 
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
