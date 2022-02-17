@@ -24,9 +24,9 @@ class Compressed(
     def __init__(self, *args):
         if len(args) == 1:
             if isinstance(args[0], UFDLType):
-                args = args[0], Integer()
-        else:
-            args = args[0], Integer.generate_subclass(args[1])(), args[2:]
+                args = (args[0], Integer()),
+        elif len(args) > 0:
+            args = (args[0], Integer.generate_subclass(args[1])(), *args[2:]),
 
         super().__init__(*args)
 
