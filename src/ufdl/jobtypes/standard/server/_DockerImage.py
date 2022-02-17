@@ -7,7 +7,7 @@ from wai.json.object.property import (
     ArrayProperty,
     BoolProperty,
     ConstantProperty, NumberProperty,
-    StringProperty
+    OneOfProperty, StringProperty
 )
 from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
@@ -36,9 +36,21 @@ class DockerImageInstance(StrictJSONObject['DockerImageInstance']):
 
     registry_url: str = StringProperty()
 
-    registry_username: OptionallyPresent[str] = StringProperty(optional=True)
+    registry_username: OptionallyPresent[Optional[str]] = OneOfProperty(
+        sub_properties=(
+            StringProperty(),
+            ConstantProperty(None)
+        ),
+        optional=True
+    )
 
-    registry_password: OptionallyPresent[str] = StringProperty(optional=True)
+    registry_password: OptionallyPresent[Optional[str]] = OneOfProperty(
+        sub_properties=(
+            StringProperty(),
+            ConstantProperty(value=None)
+        ),
+        optional=True
+    )
 
     cuda_version: CUDAVersionInstance = CUDAVersionInstance.as_property()
 
@@ -50,7 +62,12 @@ class DockerImageInstance(StrictJSONObject['DockerImageInstance']):
         element_property=StringProperty()
     )
 
-    min_hardware_generation: HardwareInstance = HardwareInstance.as_property()
+    min_hardware_generation: Optional[HardwareInstance] = OneOfProperty(
+        sub_properties=(
+            HardwareInstance.as_property(),
+            ConstantProperty(value=None)
+        )
+    )
 
     cpu: bool = BoolProperty()
 
