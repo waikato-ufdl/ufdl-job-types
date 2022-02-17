@@ -34,9 +34,9 @@ class PretrainedModelInstance(StrictJSONObject['PretrainedModelInstance']):
     description: OptionallyPresent[str] = StringProperty(optional=True)
 
     # The framework of the model
-    framework: FrameworkInstance = FrameworkInstance.as_property()
+    framework: FrameworkInstance
 
-    domain: str = StringProperty()
+    domain: str
 
     licence: OptionallyPresent[str] = StringProperty()
 
