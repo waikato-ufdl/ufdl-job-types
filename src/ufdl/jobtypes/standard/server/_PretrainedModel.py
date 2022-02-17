@@ -4,7 +4,13 @@ from ufdl.json.core.filter import FilterExpression
 from ufdl.json.core.filter.field import Exact
 
 from wai.json.object import OptionallyPresent, StrictJSONObject
-from wai.json.object.property import BoolProperty, NumberProperty, StringProperty
+from wai.json.object.property import (
+    BoolProperty,
+    NumberProperty,
+    StringProperty,
+    ConstantProperty,
+    OneOfProperty
+)
 from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema
 
@@ -37,6 +43,24 @@ class PretrainedModelInstance(StrictJSONObject['PretrainedModelInstance']):
     data: bool = BoolProperty(optional=True, default=False)
 
     metadata: OptionallyPresent[str] = StringProperty(optional=True)
+
+    creator: OptionallyPresent[Optional[int]] = OneOfProperty(
+        sub_properties=(
+            NumberProperty(integer_only=True, minimum=1),
+            ConstantProperty(value=None)
+        ),
+        optional=True
+    )
+
+    creation_time: OptionallyPresent[str] = StringProperty(optional=True)
+
+    deletion_time: OptionallyPresent[Optional[str]] = OneOfProperty(
+        sub_properties=(
+            StringProperty(),
+            ConstantProperty(value=None)
+        ),
+        optional=True
+    )
 
 
 class PretrainedModel(
