@@ -11,7 +11,6 @@ from ._not_initialised import not_initialised
 
 # Types
 ListFunction = Callable[[str, FilterSpec], List[RawJSONObject]]
-RetrieveFunction = Callable[[str, int], RawJSONObject]
 DownloadFunction = Callable[[str, int], Union[bytes, Iterator[bytes]]]
 
 # Name/type mappings
@@ -20,13 +19,11 @@ TYPE_TO_NAME_MAP: Optional[Dict[type, str]] = None
 
 # Server interaction functions
 LIST_FUNCTION: ListFunction = not_initialised()
-RETRIEVE_FUNCTION: RetrieveFunction = not_initialised()
 DOWNLOAD_FUNCTION: DownloadFunction = not_initialised()
 
 
 def initialise_server(
         list_function: ListFunction,
-        retrieve_function: RetrieveFunction,
         download_function: DownloadFunction,
         name_to_type_map: Dict[str, Type[UFDLType]]
 ):
@@ -34,10 +31,9 @@ def initialise_server(
     Initialises the type-systems connection to the server.
     """
     global NAME_TO_TYPE_MAP, TYPE_TO_NAME_MAP
-    global LIST_FUNCTION, RETRIEVE_FUNCTION, DOWNLOAD_FUNCTION
+    global LIST_FUNCTION, DOWNLOAD_FUNCTION
 
     LIST_FUNCTION = list_function
-    RETRIEVE_FUNCTION = retrieve_function
     DOWNLOAD_FUNCTION = download_function
 
     # Verify and reverse the name/type mapping
@@ -99,11 +95,6 @@ def type_translate(type: Type[UFDLType]) -> Optional[str]:
 def list_function(table_name: str, filter: FilterSpec) -> List[RawJSONObject]:
     global LIST_FUNCTION
     return LIST_FUNCTION(table_name, filter)
-
-
-def retrieve_function(table_name: str, pk: int) -> RawJSONObject:
-    global RETRIEVE_FUNCTION
-    return RETRIEVE_FUNCTION(table_name, pk)
 
 
 def download_function(table_name: str, pk: int) -> Union[bytes, Iterator[bytes]]:

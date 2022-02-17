@@ -9,10 +9,8 @@ from ._initialisation import (
     name_translate,
     type_translate,
     list_function,
-    retrieve_function,
     download_function,
     ListFunction,
-    RetrieveFunction,
     DownloadFunction
 )
 from ._not_initialised import not_initialised
