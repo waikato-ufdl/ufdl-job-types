@@ -1,3 +1,4 @@
+from ._CUDAVersion import CUDAVersion, CUDAVersionInstance
 from ._Dataset import Dataset
 from ._DockerImage import DockerImage
 from ._Domain import Domain, DomainInstance
