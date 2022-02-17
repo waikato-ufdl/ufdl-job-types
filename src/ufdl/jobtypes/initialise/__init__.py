@@ -10,6 +10,9 @@ from ._initialisation import (
     type_translate,
     list_function,
     retrieve_function,
-    download_function
+    download_function,
+    ListFunction,
+    RetrieveFunction,
+    DownloadFunction
 )
 from ._not_initialised import not_initialised
