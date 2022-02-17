@@ -19,7 +19,7 @@ class CUDAVersionInstance(StrictJSONObject['CUDAVersionInstance']):
     pk: OptionallyPresent[int] = NumberProperty(integer_only=True, minimum=1, optional=True)
 
     # The CUDA version number
-    version: float = NumberProperty()
+    version: str = StringProperty()
 
     # The full CUDA version string
     full_version: str = StringProperty(max_length=16)
