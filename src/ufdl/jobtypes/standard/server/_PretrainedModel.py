@@ -87,7 +87,7 @@ class PretrainedModel(
         return value['name']
 
     def server_table_name(self) -> str:
-        return "PretrainedModel"
+        return "pretrained-models"
 
     def filter_rules(self) -> List[FilterExpression]:
         rules = []

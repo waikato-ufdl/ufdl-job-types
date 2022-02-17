@@ -26,7 +26,7 @@ class DockerImage(
         return f"{value['name']} v{value['version']}"
 
     def server_table_name(self) -> str:
-        return "DockerImage"
+        return "docker"
 
     def filter_rules(self) -> List[FilterExpression]:
         rules = []

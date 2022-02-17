@@ -44,7 +44,7 @@ class Domain(
         return Exact(field='name', value=name)
 
     def server_table_name(self) -> str:
-        return "DataDomain"
+        return "domains"
 
     def filter_rules(self) -> List[FilterExpression]:
         rules = []

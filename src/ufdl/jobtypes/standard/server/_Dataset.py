@@ -21,7 +21,7 @@ class Dataset(
         return f"{value['name']} v{value['version']}"
 
     def server_table_name(self) -> str:
-        return "Dataset"
+        return "datasets"
 
     def filter_rules(self) -> List[FilterExpression]:
         rules = []

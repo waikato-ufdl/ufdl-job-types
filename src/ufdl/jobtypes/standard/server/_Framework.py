@@ -46,7 +46,7 @@ class Framework(
             super().__init__((String.generate_subclass(args[0])(), String.generate_subclass(args[1])()))
 
     def server_table_name(self) -> str:
-        return "Framework"
+        return "frameworks"
 
     def filter_rules(self) -> List[FilterExpression]:
         rules = []
