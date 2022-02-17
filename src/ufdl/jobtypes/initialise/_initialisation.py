@@ -1,5 +1,5 @@
 import builtins
-from typing import Callable, Dict, IO, List, Optional, Type, Union
+from typing import Callable, Dict, Iterator, List, Optional, Type, Union
 
 from ufdl.json.core.filter import FilterSpec
 
@@ -12,7 +12,7 @@ from ._not_initialised import not_initialised
 # Types
 ListFunction = Callable[[str, FilterSpec], List[RawJSONObject]]
 RetrieveFunction = Callable[[str, int], RawJSONObject]
-DownloadFunction = Callable[[str, int], Union[bytes, IO[bytes]]]
+DownloadFunction = Callable[[str, int], Union[bytes, Iterator[bytes]]]
 
 # Name/type mappings
 NAME_TO_TYPE_MAP: Optional[Dict[str, type]] = None
@@ -106,6 +106,6 @@ def retrieve_function(table_name: str, pk: int) -> RawJSONObject:
     return RETRIEVE_FUNCTION(table_name, pk)
 
 
-def download_function(table_name: str, pk: int) -> Union[bytes, IO[bytes]]:
+def download_function(table_name: str, pk: int) -> Union[bytes, Iterator[bytes]]:
     global DOWNLOAD_FUNCTION
     return DOWNLOAD_FUNCTION(table_name, pk)
