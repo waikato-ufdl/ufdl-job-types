@@ -50,7 +50,7 @@ class DockerImageInstance(StrictJSONObject['DockerImageInstance']):
         element_property=StringProperty()
     )
 
-    min_hardware_generation = HardwareInstance.as_property()
+    min_hardware_generation: HardwareInstance = HardwareInstance.as_property()
 
     cpu: bool = BoolProperty()
 
