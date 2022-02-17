@@ -6,7 +6,7 @@ from wai.json.object import OptionallyPresent, StrictJSONObject
 from wai.json.object.property import (
     ArrayProperty,
     BoolProperty,
-    NumberProperty,
+    ConstantProperty, NumberProperty,
     StringProperty
 )
 from wai.json.raw import RawJSONElement, RawJSONObject
@@ -78,12 +78,16 @@ class DockerImage(
     @property
     def instance_class(self):
         if self._instance_class is None:
-            domain_type = self.type_args[0]
+            domain_type = self.type_args[0].type_args[0].value()
             framework_type = self.type_args[1]
 
             class SpecialisedDockerImageInstance(DockerImageInstance):
                 framework = framework_type.instance_class.as_property()
-                domain = domain_type.instance_class.description
+                domain = (
+                    ConstantProperty(value=domain_type)
+                    if isinstance(domain_type, str) else
+                    StringProperty(max_length=32)
+                )
 
             self._instance_class = SpecialisedDockerImageInstance
 
