@@ -1,19 +1,18 @@
 import builtins
-import itertools
-from typing import Callable, Dict, List, Optional, Type
+from typing import Callable, Dict, IO, List, Optional, Type, Union
 
 from ufdl.json.core.filter import FilterSpec
 
 from wai.json.raw import RawJSONObject
 
-from ..base import UFDLType, ValueType, String, Integer, Float, Boolean
+from ..base import UFDLType
 from ..error import NotInitialisedException
 from ._not_initialised import not_initialised
 
 # Types
 ListFunction = Callable[[str, FilterSpec], List[RawJSONObject]]
 RetrieveFunction = Callable[[str, int], RawJSONObject]
-DownloadFunction = Callable[[str, int], bytes]
+DownloadFunction = Callable[[str, int], Union[bytes, IO[bytes]]]
 
 # Name/type mappings
 NAME_TO_TYPE_MAP: Optional[Dict[str, type]] = None
@@ -107,6 +106,6 @@ def retrieve_function(table_name: str, pk: int) -> RawJSONObject:
     return RETRIEVE_FUNCTION(table_name, pk)
 
 
-def download_function(table_name: str, pk: int) -> bytes:
+def download_function(table_name: str, pk: int) -> Union[bytes, IO[bytes]]:
     global DOWNLOAD_FUNCTION
     return DOWNLOAD_FUNCTION(table_name, pk)
