@@ -20,7 +20,7 @@ class BLOB(
 
     def __init__(self, *args):
         if len(args) == 1 and isinstance(args[0], str):
-            args = String.generate_subclass(args[0]),
+            args = String.generate_subclass(args[0])(),
 
         super().__init__(*args)
 

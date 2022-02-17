@@ -34,7 +34,7 @@ class Array(
             else:
                 args = args[0]
         else:
-            args = args[0], Integer() if args[1] is None else Integer.generate_subclass(args[1])
+            args = args[0], Integer() if args[1] is None else Integer.generate_subclass(args[1])()
 
         super().__init__(args)
 

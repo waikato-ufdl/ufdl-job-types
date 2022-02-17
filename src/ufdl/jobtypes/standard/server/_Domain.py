@@ -34,7 +34,7 @@ class Domain(
 ):
     def __init__(self, type_args: Union[str, Optional[Tuple[String]]] = None):
         if isinstance(type_args, str):
-            type_args = (String.generate_subclass(type_args),)
+            type_args = (String.generate_subclass(type_args)(),)
         super().__init__(type_args)
 
     def extract_name_from_json(self, value: RawJSONObject) -> str:
