@@ -38,7 +38,7 @@ class PretrainedModelInstance(StrictJSONObject['PretrainedModelInstance']):
 
     domain: str
 
-    licence: OptionallyPresent[str] = StringProperty()
+    licence: OptionallyPresent[str] = StringProperty(optional=True)
 
     data: bool = BoolProperty(optional=True, default=False)
 
