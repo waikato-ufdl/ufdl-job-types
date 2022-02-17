@@ -40,7 +40,7 @@ class PK(
         results = sub_type.get_filtered_list_of_json_values(Exact(field="pk", value=value))
         if len(results) != 1:
             raise Exception(f"Couldn't get unique value with PK {value} from server")
-        return sub_type.parse_json_value(value[0])
+        return sub_type.parse_json_value(results[0])
 
     def format_python_value_to_json(self, value: int) -> RawJSONElement:
         self.validate_with_schema(value)
