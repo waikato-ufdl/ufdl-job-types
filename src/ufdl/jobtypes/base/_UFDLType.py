@@ -2,7 +2,7 @@ from typing import Generic, IO, Optional, Tuple, TypeVar, Union
 
 from wai.common.meta import instanceoptionalmethod
 
-from ..error import WrongNumberOfTypeArgsException, IsNotSubtypeException
+from ..error import WrongNumberOfTypeArgsException, IsNotSubtypeException, expect
 
 TypeArgsType = TypeVar(
     'TypeArgsType',
@@ -47,8 +47,7 @@ class UFDLType(Generic[TypeArgsType, InputType, OutputType]):
 
             # Check each type argument is a sub-type of its expected base type
             for type_arg, type_param_expected_base_type in zip(type_args, type_params_expected_base_types):
-                if not isinstance(type_arg, UFDLType):
-                    raise TypeError(f"Expected {UFDLType}; got {type_arg}")
+                expect(UFDLType, type_arg)
 
                 if not type_arg.is_subtype_of(type_param_expected_base_type):
                     raise IsNotSubtypeException(
