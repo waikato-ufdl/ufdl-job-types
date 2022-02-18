@@ -8,6 +8,7 @@ from wai.json.raw import RawJSONElement, RawJSONObject
 from wai.json.schema import JSONSchema, standard_object, number, string_schema
 
 from ...base import NamedServerType, UFDLType
+from ...error import expect
 from ...util import parse_v_name
 from ._Domain import Domain
 
@@ -30,8 +31,8 @@ class DatasetInstance(JSONObject['DatasetInstance']):
 class Dataset(
     NamedServerType[
         Tuple[Domain],
-        RawJSONObject,
-        RawJSONObject
+        DatasetInstance,
+        DatasetInstance
     ]
 ):
     def __init__(self, type_args: Optional[Tuple[Domain]] = None):
@@ -73,23 +74,16 @@ class Dataset(
                 rules.append(Exact(field="domain.description", value=description_type))
         return rules
 
-    def parse_json_value(self, value: RawJSONElement) -> RawJSONObject:
-        self.validate_with_schema(value)
-        return value
+    def parse_json_value(self, value: RawJSONElement) -> DatasetInstance:
+        return self.instance_class.from_raw_json(value)
 
-    def format_python_value_to_json(self, value: RawJSONObject) -> RawJSONElement:
-        self.validate_with_schema(value)
-        return value
+    def format_python_value_to_json(self, value: DatasetInstance) -> RawJSONElement:
+        expect(DatasetInstance, value)
+        return value.to_raw_json()
 
     @property
     def json_schema(self) -> JSONSchema:
-        return standard_object(
-            {
-                "pk": number(minimum=1, integer_only=True),
-                "name": string_schema(max_length=200),
-                "version": number(minimum=1, integer_only=True)
-            }
-        )
+        return self.instance_class.get_json_validation_schema()
 
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:
