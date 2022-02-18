@@ -30,23 +30,22 @@ class Compressed(
 
         super().__init__(*args)
 
-    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> InputType:
-        expect((bytes, BufferedIOBase), value)
+    def parse_binary_value(self, value: bytes) -> InputType:
+        expect(bytes, value)
         compression = self.type_args[1].value()
         expect(int, compression)
-        if isinstance(value, bytes):
-            value = BytesIO(value)
+        value = BytesIO(value)
         with ZipFile(value, "r", compression=compression) as zf:
             return self.type_args[0].parse_binary_value(zf.read("data"))
 
-    def format_python_value(self, value: OutputType) -> Union[bytes, IO[bytes]]:
+    def format_python_value(self, value: OutputType) -> bytes:
         compression = self.type_args[1].value()
         expect(int, compression)
         buffer = BytesIO()
         with ZipFile(buffer, "w", compression=compression) as zf:
             zf.writestr("data", self.type_args[0].format_python_value(value))
         buffer.seek(0)
-        return buffer
+        return buffer.read()
 
     @classmethod
     def type_params_expected_base_types(cls) -> Tuple[UFDLType, ...]:

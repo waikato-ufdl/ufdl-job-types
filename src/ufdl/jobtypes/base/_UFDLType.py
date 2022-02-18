@@ -1,4 +1,4 @@
-from typing import Generic, IO, Optional, Tuple, TypeVar, Union
+from typing import Generic, Optional, Tuple, TypeVar
 
 from wai.common.meta import instanceoptionalmethod
 
@@ -102,7 +102,7 @@ class UFDLType(Generic[TypeArgsType, InputType, OutputType]):
         """
         return tuple()
 
-    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> InputType:
+    def parse_binary_value(self, value: bytes) -> InputType:
         """
         Parses a raw value supplied as binary into the Python-type.
 
@@ -113,7 +113,7 @@ class UFDLType(Generic[TypeArgsType, InputType, OutputType]):
         """
         raise NotImplementedError(self.parse_binary_value.__name__)
 
-    def format_python_value(self, value: OutputType) -> Union[bytes, IO[bytes]]:
+    def format_python_value(self, value: OutputType) -> bytes:
         """
         Formats a Python value into binary.
 

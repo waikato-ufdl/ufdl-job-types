@@ -1,13 +1,14 @@
 from typing import IO, Optional, Tuple, Union, overload
 
 from ...base import UFDLType, String
+from ...error import expect
 
 
 class BLOB(
     UFDLType[
         Tuple[String],
-        Union[bytes, IO[bytes]],
-        Union[bytes, IO[bytes]]
+        bytes,
+        bytes
     ]
 ):
     """
@@ -24,10 +25,12 @@ class BLOB(
 
         super().__init__(*args)
 
-    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> Union[bytes, IO[bytes]]:
+    def parse_binary_value(self, value: bytes) -> bytes:
+        expect(bytes, value)
         return value
 
-    def format_python_value(self, value: Union[bytes, IO[bytes]]) -> Union[bytes, IO[bytes]]:
+    def format_python_value(self, value: bytes) -> bytes:
+        expect(bytes, value)
         return value
 
     @classmethod

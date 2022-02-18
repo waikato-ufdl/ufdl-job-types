@@ -8,6 +8,7 @@ from wai.json.schema import JSONSchema, enum
 from ..base import InputType, OutputType, UFDLType, ServerResidentType
 from ..error import expect
 from ..initialise import download_function
+from ..util import read_all
 
 
 class JobOutput(
@@ -27,9 +28,10 @@ class JobOutput(
 
     def parse_json_value(self, value: RawJSONElement) -> InputType:
         self.validate_with_schema(value)
-        return self.type_args[0].parse_binary_value(
-            download_function(self.server_table_name(), value)
-        )
+        downloaded_job_output_data = download_function(self.server_table_name(), value)
+        if not isinstance(downloaded_job_output_data, bytes):
+            downloaded_job_output_data = read_all(downloaded_job_output_data)
+        return self.type_args[0].parse_binary_value(downloaded_job_output_data)
 
     def format_python_value_to_json(self, value: int) -> RawJSONElement:
         expect(int, value)

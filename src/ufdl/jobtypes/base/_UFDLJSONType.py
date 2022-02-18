@@ -1,11 +1,11 @@
 import json
-from typing import IO, Union
 
 import jsonschema
 from wai.json.raw import RawJSONElement
 from wai.json.schema import JSONSchema
 
 from ._UFDLType import UFDLType, TypeArgsType, InputType, OutputType
+from ..error import expect
 
 
 class UFDLJSONType(
@@ -14,12 +14,9 @@ class UFDLJSONType(
     """
     TODO
     """
-    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> InputType:
-        json_load_func = (
-            json.loads if isinstance(value, bytes)
-            else json.load
-        )
-        return self.parse_json_value(json_load_func(value))
+    def parse_binary_value(self, value: bytes) -> InputType:
+        expect(bytes, value)
+        return self.parse_json_value(json.loads(value))
 
     def parse_json_value(self, value: RawJSONElement) -> InputType:
         """
@@ -32,7 +29,7 @@ class UFDLJSONType(
         """
         raise NotImplementedError(self.parse_json_value.__name__)
 
-    def format_python_value(self, value: OutputType) -> Union[bytes, IO[bytes]]:
+    def format_python_value(self, value: OutputType) -> bytes:
         return json.dumps(self.format_python_value_to_json(value)).encode("UTF-8")
 
     def format_python_value_to_json(self, value: OutputType) -> RawJSONElement:

@@ -1,5 +1,4 @@
-from io import BufferedIOBase
-from typing import IO, Tuple, Union
+from typing import Tuple
 
 from ..base import UFDLType
 from ..error import expect
@@ -9,16 +8,16 @@ from .server import Domain, Framework
 class Model(
     UFDLType[
         Tuple[Domain, Framework],
-        Union[bytes, IO[bytes]],
-        Union[bytes, IO[bytes]]
+        bytes,
+        bytes
     ]
 ):
-    def parse_binary_value(self, value: Union[bytes, IO[bytes]]) -> Union[bytes, IO[bytes]]:
-        expect((bytes, BufferedIOBase), value)
+    def parse_binary_value(self, value: bytes) -> bytes:
+        expect(bytes, value)
         return value
 
-    def format_python_value(self, value: Union[bytes, IO[bytes]]) -> Union[bytes, IO[bytes]]:
-        expect((bytes, BufferedIOBase), value)
+    def format_python_value(self, value: bytes) -> bytes:
+        expect(bytes, value)
         return value
 
     @classmethod
