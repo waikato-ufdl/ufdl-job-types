@@ -26,5 +26,5 @@ def expect(
     :return:
     """
     if not isinstance(received_value, expected_type):
-        raise ExpectationError(received_value, received_value)
+        raise ExpectationError(expected_type, received_value)
     return received_value
